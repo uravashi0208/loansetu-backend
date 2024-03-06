@@ -31,7 +31,7 @@ exports.login_user = (req, res, next) => {
     .then((match) => {
         if (match) {
             const payload = { user: user.email };
-            const options = { expiresIn: 60 * 60 };
+            const options = { expiresIn: '12h' };
             const secret = "loginJWTTokenBaseVerification";
             const token = jwt.sign(payload, secret, options);
 
@@ -53,10 +53,54 @@ exports.login_user = (req, res, next) => {
     });
 };
 
+exports.register = async (req, res, next) => {
+    const email = req.body.email;
+    const username = req.body.user_name;
+    const password = req.body.password;
+
+    try {
+        const foundUser = await User.findOne({ email: email });
+
+        if (foundUser) {
+            return res.json({
+                response: false,
+                message: "Email already exists.",
+            });
+        }
+
+        const hash = await bcrypt.hash(password, saltRounds);
+
+        const UserData = {
+            user_name: username,
+            email: email,
+            password: hash,
+            role: "staff",
+            user_status: true,
+        };
+
+        const createdUser = await User.create(UserData);
+
+        const payload = { user: email };
+        const options = { expiresIn: 60 * 60 };
+        const secret = "loginJWTTokenBaseVerification";
+        const token = jwt.sign(payload, secret, options);
+
+        res.json({
+            response: true,
+            data: createdUser,
+            message: "User registered successfully.",
+            token: token,
+        });
+
+    } catch (error) {
+        return next(error);
+    }
+};
+
 exports.forgot_password = (req, res, next) => {
     const email = req.body.email;
     User.findOne({ email: email })
-    .then((foundUser) => {
+    .then(async (foundUser) => {
         if (foundUser) {
             const randomNumber = Math.floor(1000 + Math.random() * 9000);
             const mailOptions = {

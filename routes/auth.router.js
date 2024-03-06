@@ -1,5 +1,5 @@
 const express = require('express');
-const { authLogin, validate, forgotPassword, verifyOtp, resetPassword } = require('../middleware/validation');
+const { authLogin, validate, forgotPassword, verifyOtp, resetPassword, userValidation } = require('../middleware/validation');
 const app = express();
 const JwtVerify = require('../middleware/jwtToken');
 
@@ -8,6 +8,8 @@ const authRoute = express.Router();
 const authcontroller = require('../controller/auth.controller');
 
 authRoute.route('/login').post(authLogin(), validate, authcontroller.login_user);
+
+authRoute.route('/register').post(userValidation(), validate, authcontroller.register);
 
 authRoute.route('/forgot-password').post(forgotPassword(), validate, authcontroller.forgot_password);
 

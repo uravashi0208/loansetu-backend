@@ -6,6 +6,12 @@ let User = new Schema(
         user_name : {
             type : String
         },
+        first_name : {
+            type : String
+        },
+        last_name : {
+            type : String
+        },
         email : {
             type : String
         },
@@ -19,6 +25,18 @@ let User = new Schema(
             type : Boolean,
             default : false
         },
+        isAdmin : {
+            type : Boolean,
+            default : false
+        },
+        isStaff : {
+            type : Boolean,
+            default : false
+        },
+        isSendWelcomeMail : {
+            type : Boolean,
+            default : false
+        },
         createdAt : {
             type : Date,
             default : new Date()
@@ -29,6 +47,18 @@ let User = new Schema(
         },
         loginotp : {
             type : Number
+        },
+        rate : {
+            type : Number
+        },
+        phone : {
+            type : Number
+        },
+        emailsignature : {
+            type : String
+        },
+        image : {
+            type : String
         },
     },
     {

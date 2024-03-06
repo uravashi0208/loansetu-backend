@@ -7,6 +7,7 @@ const bodyParser= require('body-parser');
 const mongoose = require('mongoose');
 const dbConfig = require('./config/db-example');
 const Auth = require('./routes/auth.router');
+const User = require('./routes/user.route');
 var app = express();
 const cors = require('cors');
 app.use(bodyParser.json());
@@ -43,6 +44,7 @@ mongoose.connect(dbConfig.db)
 
 //User router
 app.use('/api', Auth);
+app.use('/api', User);
 
 // Send all other requests to the Angular app
 app.get('/node/angular/*', function(req, res) {

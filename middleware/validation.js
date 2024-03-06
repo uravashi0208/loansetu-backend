@@ -13,10 +13,6 @@ exports.userValidation = () => {
     body('user_name').notEmpty().withMessage('User Name is required!'),
     body('email').notEmpty().withMessage('Email is required!'),
     body('password').notEmpty().withMessage('Password is required!'),
-    body('confirm_password').notEmpty().withMessage('Confirm Password is required!'),
-    body('role').notEmpty().withMessage('User Role is required!'),
-    // body('user_slug').notEmpty().withMessage('User Slug is required!'),
-    body('user_status').notEmpty().withMessage('User Status is required!'),
   ]
 }
 exports.validateUserToken = () => {
