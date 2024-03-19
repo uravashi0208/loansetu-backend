@@ -8,51 +8,56 @@ const mongoose = require('mongoose');
 const dbConfig = require('./config/db-example');
 const Auth = require('./routes/auth.router');
 const User = require('./routes/user.route');
+const BranchLocation = require("./routes/branchLocation.router");
 var app = express();
-const cors = require('cors');
+const cors = require("cors");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/node/angular', express.static( path.join( __dirname, '/../vkup1-angular10/dist' ) ) );
+app.use(
+  "/node/angular",
+  express.static(path.join(__dirname, "/../vkup1-angular10/dist"))
+);
 // app.use(express.static(path.join(__dirname, 'vkup1-angular10')));
 app.use(cors());
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-if (process.env.NODE_ENV === 'production') {
+process.env.NODE_ENV = process.env.NODE_ENV || "development";
+if (process.env.NODE_ENV === "production") {
   //require('@risingstack/trace');
 }
 
-
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "jade");
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Connecting mongoDB
 mongoose.Promise = global.Promise;
-mongoose.connect(dbConfig.db)
+mongoose
+  .connect(dbConfig.db)
   .then(() => {
-    console.log('Database connected successfully');
+    console.log("Database connected successfully");
   })
-  .catch(error => {
-    console.log('Could not connect to database: ' + error);
+  .catch((error) => {
+    console.log("Could not connect to database: " + error);
   });
 
 //User router
-app.use('/api', Auth);
-app.use('/api', User);
+app.use("/api", Auth);
+app.use("/api/staff", User);
+app.use("/api/branchlocation", BranchLocation);
 
 // Send all other requests to the Angular app
-app.get('/node/angular/*', function(req, res) {
-  res.sendFile(path.join(__dirname + '/../vkup1-angular10/dist/index.html'));
+app.get("/node/angular/*", function (req, res) {
+  res.sendFile(path.join(__dirname + "/../vkup1-angular10/dist/index.html"));
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
