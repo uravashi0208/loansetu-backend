@@ -1,5 +1,5 @@
-const { transporter } = require("../config/emailConfig");
 const Branchlocation = require("../model/branchlocation");
+const messages = require("../constant/message");
 
 exports.getAllBranchLocation = (req, res, next) => {
   Branchlocation.find({}).then((foundBranchLocation) => {
@@ -11,7 +11,7 @@ exports.getAllBranchLocation = (req, res, next) => {
     } else {
       res.json({
         response: false,
-        message: "No data found",
+        message: messages.NO_DATA_FOUND,
       });
     }
   });
@@ -27,7 +27,7 @@ exports.addBranchLocation = async (req, res, next) => {
     if (existingLocation) {
       return res.json({
         response: false,
-        message: "Branch Location already exists.",
+        message: messages.RECORD_EXIST,
       });
     }
 
@@ -39,10 +39,9 @@ exports.addBranchLocation = async (req, res, next) => {
     await Branchlocation.create(updatedData);
     res.json({
       response: true,
-      message: "Location added succesfully.",
+      message: messages.ADD_LOCATION,
     });
   } catch (error) {
-    console.log("error :", error);
     return next(error);
   }
 };
@@ -52,15 +51,14 @@ exports.deleteBranchLocation = async (req, res, next) => {
   try {
     const deletedLocation = await Branchlocation.findByIdAndDelete(_id);
     if (!deletedLocation) {
-      res.json({ response: false, message: "Location not found." });
+      res.json({ response: false, message: messages.NO_DATA_FOUND });
     } else {
       res.json({
         response: true,
-        message: "Successfully deleted branch location.",
+        message: messages.DELETE_LOCATION,
       });
     }
   } catch (error) {
-    console.log("error :", error);
     return next(error);
   }
 };
@@ -70,17 +68,14 @@ exports.getBranchLocationById = async (req, res) => {
     const _id = req.params.id;
     const branchlocation = await Branchlocation.findById(_id);
     if (!branchlocation) {
-      return res
-        .status(404)
-        .json({ response: false, message: "Location not found." });
+      return res.json({ response: false, message: messages.NO_DATA_FOUND });
     }
     res.json({
       response: true,
       data: branchlocation,
-      message: "Successfully get location.",
     });
   } catch (error) {
-    res.status(500).json({ response: false, errors: error });
+    res.json({ response: false, errors: error });
   }
 };
 
@@ -94,18 +89,16 @@ exports.updateBranchLocation = (req, res) => {
   })
     .then((category) => {
       if (!category) {
-        res
-          .status(404)
-          .json({ response: false, message: "Location not found." });
+        res.json({ response: false, message: messages.NO_DATA_FOUND });
       } else {
         res.json({
           response: true,
           data: category,
-          message: "Location updated successfully.",
+          message: messages.UPDATE_LOCATION,
         });
       }
     })
     .catch((error) => {
-      res.status(500).json({ response: false, errors: error });
+      res.json({ response: false, errors: error });
     });
 };

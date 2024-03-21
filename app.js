@@ -9,6 +9,9 @@ const dbConfig = require('./config/db-example');
 const Auth = require('./routes/auth.router');
 const User = require('./routes/user.route');
 const BranchLocation = require("./routes/branchLocation.router");
+const LeadStatus = require("./routes/leadstatus.router");
+const University = require("./routes/university.router");
+const CourseType = require("./routes/courseType.router");
 var app = express();
 const cors = require("cors");
 app.use(bodyParser.json());
@@ -50,6 +53,9 @@ mongoose
 app.use("/api", Auth);
 app.use("/api/staff", User);
 app.use("/api/branchlocation", BranchLocation);
+app.use("/api/leadstatus", LeadStatus);
+app.use("/api/university", University);
+app.use("/api/coursetype", CourseType);
 
 // Send all other requests to the Angular app
 app.get("/node/angular/*", function (req, res) {

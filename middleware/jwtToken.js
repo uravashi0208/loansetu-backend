@@ -11,12 +11,12 @@ exports.validateToken = (req, res, next) => {
         jwt.verify(token, secret, (err, decoded) => {
             if (err) {
                 if (err.name === 'TokenExpiredError') {
-                    return res.status(401).json({
+                    return res.json({
                         error: 'Authentication error. Token has expired.',
                         status: 401,
                     });
                 } else {
-                    return res.status(401).json({
+                    res.json({
                         error: 'Authentication error. Token is Invalid.',
                         status: 401,
                     });
@@ -29,7 +29,7 @@ exports.validateToken = (req, res, next) => {
             }
         });
     } else {
-        return res.status(401).json({
+        return res.json({
             error: 'Authentication error. Token required.',
             status: 401,
         });

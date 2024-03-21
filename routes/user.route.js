@@ -66,12 +66,22 @@ userRoute.route("/addstaff").post(
 );
 
 userRoute
-  .route("/delete-staff/:id")
+  .route("/deletestaff/:id")
   .delete(JwtVerify.validateToken, usercontroller.deletestaff);
 
 userRoute
   .route("/getstaffbyid/:id")
   .get(JwtVerify.validateToken, usercontroller.getstaffById);
 
+userRoute
+  .route("/editstaff/:id")
+  .put(JwtVerify.validateToken, usercontroller.updateStaff);
 
+userRoute
+  .route("/getstaffpermissionbyid/:id")
+  .get(JwtVerify.validateToken, usercontroller.getstaffpermissionById);
+
+userRoute
+  .route("/editstaffpermission/:id")
+  .put(JwtVerify.validateToken, usercontroller.updateStaffPermission);
 module.exports = userRoute;
