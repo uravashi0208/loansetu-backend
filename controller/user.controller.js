@@ -2,6 +2,8 @@ const { transporter } = require("../config/emailConfig");
 const User = require("../model/user");
 const StaffPermission = require("../model/staffpermission");
 const messages = require("../constant/message");
+const bcrypt = require("bcryptjs");
+const saltRounds = 10;
 
 exports.update_profile = (req, res, next) => {
   User.findOne({ _id: req.body.userId })
@@ -45,12 +47,13 @@ exports.add_staff = async (req, res, next) => {
       });
     }
 
+    const hash = await bcrypt.hash(req.body.password, saltRounds);
     const updatedData = {
       user_name: req.body.first_name + " " + req.body.last_name,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       email: req.body.email,
-      password: req.body.password,
+      password: hash,
       role: req.body.isAdmin === true ? "Admin" : "staff",
       user_status: true,
       isAdmin: req.body.isAdmin,
@@ -161,14 +164,15 @@ exports.getstaffById = async (req, res) => {
   }
 };
 
-exports.updateStaff = (req, res) => {
+exports.updateStaff = async (req, res) => {
+  const hash = await bcrypt.hash(req.body.password, saltRounds);
   const _id = req.params.id;
   User.findByIdAndUpdate(_id, {
     user_name: req.body.first_name + " " + req.body.last_name,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     email: req.body.email,
-    password: req.body.password,
+    password: hash,
     role: req.body.isAdmin === true ? "Admin" : "staff",
     user_status: true,
     isAdmin: req.body.isAdmin,

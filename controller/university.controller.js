@@ -18,25 +18,24 @@ exports.getAllUniversity = (req, res, next) => {
 };
 
 exports.addUniversity = async (req, res, next) => {
+  console.log("req.body :", req.body);
   try {
     // Check if email or phone number already exists
-    const existingUniversity = await University.findOne({
-      university_name: { $regex: new RegExp(req.body.university_name, "i") },
-    });
-
-    if (existingUniversity) {
-      return res.json({
-        response: false,
-        message: messages.RECORD_EXIST,
-      });
-    }
-
-    const updatedData = {
-      country_name: req.body.country_name,
-      university_name: req.body.university_name,
-    };
-
-    await University.create(updatedData);
+    // const existingUniversity = await University.findOne({
+    //   university_name: { $regex: new RegExp(req.body.university_name, "i") },
+    // });
+    // if (existingUniversity) {
+    //   return res.json({
+    //     response: false,
+    //     message: messages.RECORD_EXIST,
+    //   });
+    // }
+    // const updatedData = {
+    //   country_name: req.body.country_name,
+    //   university_name: req.body.university_name,
+    // };
+    await University.insertMany(req.body);
+    // await University.create(updatedData);
     res.json({
       response: true,
       message: messages.ADD_UNIVERSITY,
