@@ -32,6 +32,9 @@ const messages = {
   ADD_COURSE_TYPE: "Course Type added succesfully.",
   DELETE_COURSE_TYPE: "Course Type deleted succesfully.",
   UPDATE_COURSE_TYPE: "Course Type updated successfully.",
+  ADD_LOAN_TYPE: "Loan Type added succesfully.",
+  DELETE_LOAN_TYPE: "Loan Type deleted succesfully.",
+  UPDATE_LOAN_TYPE: "Loan Type updated successfully.",
 };
 
 module.exports = messages;

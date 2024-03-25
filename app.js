@@ -12,6 +12,7 @@ const BranchLocation = require("./routes/branchLocation.router");
 const LeadStatus = require("./routes/leadstatus.router");
 const University = require("./routes/university.router");
 const CourseType = require("./routes/courseType.router");
+const LoanType = require("./routes/loanType.router");
 var app = express();
 const cors = require("cors");
 app.use(bodyParser.json({ limit: "5000mb" }));
@@ -56,6 +57,7 @@ app.use("/api/branchlocation", BranchLocation);
 app.use("/api/leadstatus", LeadStatus);
 app.use("/api/university", University);
 app.use("/api/coursetype", CourseType);
+app.use("/api/loantype", LoanType);
 
 // Send all other requests to the Angular app
 app.get("/node/angular/*", function (req, res) {

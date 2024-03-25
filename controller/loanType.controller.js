@@ -17,14 +17,14 @@ exports.getAllLoanType = (req, res, next) => {
   });
 };
 
-exports.addCourseType = async (req, res, next) => {
+exports.addLoanType = async (req, res, next) => {
   try {
     // Check if email or phone number already exists
-    const existingCourseType = await CourseType.findOne({
-      course_type_name: { $regex: new RegExp(req.body.course_type_name, "i") },
+    const existingLoanType = await LoanType.findOne({
+      loan_type: { $regex: new RegExp(req.body.loan_type, "i") },
     });
 
-    if (existingCourseType) {
+    if (existingLoanType) {
       return res.json({
         response: false,
         message: messages.RECORD_EXIST,
@@ -32,29 +32,29 @@ exports.addCourseType = async (req, res, next) => {
     }
 
     const updatedData = {
-      course_type_name: req.body.course_type_name,
+      loan_type: req.body.loan_type,
     };
 
-    await CourseType.create(updatedData);
+    await LoanType.create(updatedData);
     res.json({
       response: true,
-      message: messages.ADD_COURSE_TYPE,
+      message: messages.ADD_LOAN_TYPE,
     });
   } catch (error) {
     return next(error);
   }
 };
 
-exports.deleteCourseType = async (req, res, next) => {
+exports.deleteLoanType = async (req, res, next) => {
   const _id = req.params.id;
   try {
-    const deletedCourseType = await CourseType.findByIdAndDelete(_id);
-    if (!deletedCourseType) {
+    const deletedLoanType = await LoanType.findByIdAndDelete(_id);
+    if (!deletedLoanType) {
       res.json({ response: false, message: messages.NO_DATA_FOUND });
     } else {
       res.json({
         response: true,
-        message: messages.DELETE_COURSE_TYPE,
+        message: messages.DELETE_LOAN_TYPE,
       });
     }
   } catch (error) {
@@ -62,36 +62,36 @@ exports.deleteCourseType = async (req, res, next) => {
   }
 };
 
-exports.getCourseTypeById = async (req, res) => {
+exports.getLoanTypeById = async (req, res) => {
   try {
     const _id = req.params.id;
-    const courseType = await CourseType.findById(_id);
-    if (!courseType) {
+    const loanType = await LoanType.findById(_id);
+    if (!loanType) {
       return res.json({ response: false, message: messages.NO_DATA_FOUND });
     }
     res.json({
       response: true,
-      data: courseType,
+      data: loanType,
     });
   } catch (error) {
     res.json({ response: false, errors: error });
   }
 };
 
-exports.updateCourseType = (req, res) => {
+exports.updateLoanType = (req, res) => {
   const _id = req.params.id;
-  const course_type_name = req.body.course_type_name;
-  CourseType.findByIdAndUpdate(_id, {
-    course_type_name: course_type_name,
+  const loan_type = req.body.loan_type;
+  LoanType.findByIdAndUpdate(_id, {
+    loan_type: loan_type,
   })
-    .then((coursetype) => {
-      if (!coursetype) {
+    .then((loanType) => {
+      if (!loanType) {
         res.json({ response: false, message: messages.NO_DATA_FOUND });
       } else {
         res.json({
           response: true,
-          data: coursetype,
-          message: messages.UPDATE_COURSE_TYPE,
+          data: loanType,
+          message: messages.UPDATE_LOAN_TYPE,
         });
       }
     })
