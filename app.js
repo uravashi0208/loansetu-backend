@@ -14,7 +14,7 @@ const University = require("./routes/university.router");
 const CourseType = require("./routes/courseType.router");
 var app = express();
 const cors = require("cors");
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "5000mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   "/node/angular",

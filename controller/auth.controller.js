@@ -10,6 +10,10 @@ exports.login_user = (req, res, next) => {
   const password = req.body.password;
   let user;
 
+  User.find({}).then((foundLeadStatus) => {
+    console.log("foundLeadStatus :", foundLeadStatus);
+  });
+
   User.findOne({ email: email })
     .then((foundUser) => {
       user = foundUser;
