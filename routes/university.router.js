@@ -10,6 +10,14 @@ universityRoute
   .get(JwtVerify.validateToken, universitycontroller.getAllUniversity);
 
 universityRoute
+  .route("/getuniversitybycountry/:id")
+  .get(JwtVerify.validateToken, universitycontroller.getAllUniversityByCountry);
+
+universityRoute
+  .route("/getcountry")
+  .get(JwtVerify.validateToken, universitycontroller.getAllCountry);
+
+universityRoute
   .route("/adduniversity")
   .post(JwtVerify.validateToken, universitycontroller.addUniversity);
 

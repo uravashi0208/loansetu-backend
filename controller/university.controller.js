@@ -2,6 +2,7 @@ const University = require("../model/university");
 const messages = require("../constant/message");
 
 exports.getAllUniversity = (req, res, next) => {
+  const id = req.params.id;
   University.find({}).then((foundUniversity) => {
     if (foundUniversity) {
       res.json({
@@ -17,25 +18,68 @@ exports.getAllUniversity = (req, res, next) => {
   });
 };
 
+exports.getAllUniversityByCountry = (req, res, next) => {
+  const id = req.params.id;
+  University.find({ country_name: id }).then((foundUniversity) => {
+    if (foundUniversity) {
+      res.json({
+        response: true,
+        data: foundUniversity,
+      });
+    } else {
+      res.json({
+        response: false,
+        message: messages.NO_DATA_FOUND,
+      });
+    }
+  });
+};
+
+exports.getAllCountry = (req, res, next) => {
+  University.aggregate([
+    { $group: { _id: "$country_name" } },
+    { $match: { _id: { $exists: true, $ne: null } } },
+  ])
+    .then((foundCountries) => {
+      if (foundCountries && foundCountries.length > 0) {
+        const commonCountries = foundCountries.map((country) => country._id);
+        res.json({
+          response: true,
+          data: commonCountries,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching common countries:", error);
+      res.status(500).json({
+        response: false,
+        message: "Internal server error",
+      });
+    });
+};
+
 exports.addUniversity = async (req, res, next) => {
-  console.log("req.body :", req.body);
   try {
     // Check if email or phone number already exists
-    // const existingUniversity = await University.findOne({
-    //   university_name: { $regex: new RegExp(req.body.university_name, "i") },
-    // });
-    // if (existingUniversity) {
-    //   return res.json({
-    //     response: false,
-    //     message: messages.RECORD_EXIST,
-    //   });
-    // }
-    // const updatedData = {
-    //   country_name: req.body.country_name,
-    //   university_name: req.body.university_name,
-    // };
-    await University.insertMany(req.body);
-    // await University.create(updatedData);
+    const existingUniversity = await University.findOne({
+      university_name: { $regex: new RegExp(req.body.university_name, "i") },
+    });
+    if (existingUniversity) {
+      return res.json({
+        response: false,
+        message: messages.RECORD_EXIST,
+      });
+    }
+    const updatedData = {
+      country_name: req.body.country_name,
+      university_name: req.body.university_name,
+    };
+    await University.create(updatedData);
     res.json({
       response: true,
       message: messages.ADD_UNIVERSITY,

@@ -4,6 +4,7 @@ const StaffPermission = require("../model/staffpermission");
 const messages = require("../constant/message");
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
+const config = require("../config/environments/development");
 
 exports.update_profile = (req, res, next) => {
   User.findOne({ _id: req.body.userId })
@@ -71,10 +72,12 @@ exports.add_staff = async (req, res, next) => {
       branchlocation: req.body.branchlocation,
       company_email: req.body.company_email,
       emailsignature: req.body.emailsignature,
-      image: req.files.image ? req.files.image[0].filename : "",
-      pan_image: req.files.pan_image[0].filename,
-      aadhar_image: req.files.aadhar_image[0].filename,
-      contract_pdf: req.files.contract_pdf[0].filename,
+      image: req.files.image
+        ? `${config.BASE_URL}/uploads/staff/${req.files.image[0].filename}`
+        : "",
+      pan_image: `${config.BASE_URL}/uploads/staff/${req.files.pan_image[0].filename}`,
+      aadhar_image: `${config.BASE_URL}/uploads/staff/${req.files.aadhar_image[0].filename}`,
+      contract_pdf: `${config.BASE_URL}/uploads/staff/${req.files.contract_pdf[0].filename}`,
     };
 
     const staffData = await User.create(updatedData);

@@ -35,6 +35,9 @@ const messages = {
   ADD_LOAN_TYPE: "Loan Type added succesfully.",
   DELETE_LOAN_TYPE: "Loan Type deleted succesfully.",
   UPDATE_LOAN_TYPE: "Loan Type updated successfully.",
+  ADD_STUDENT: "Student added succesfully.",
+  DELETE_STUDENT: "Student deleted succesfully.",
+  UPDATE_STUDENT: "Student updated successfully.",
 };
 
 module.exports = messages;

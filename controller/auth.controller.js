@@ -39,7 +39,7 @@ exports.login_user = (req, res, next) => {
         const options = { expiresIn: "12h" };
         const secret = "loginJWTTokenBaseVerification";
         const token = jwt.sign(payload, secret, options);
-
+        
         res.json({
           response: true,
           data: user,
