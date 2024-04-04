@@ -167,10 +167,13 @@ let Student = new Schema(
     city: {
       type: String,
     },
-    isLead: {
-      type: Boolean,
+    leadstatus: {
+      type: String,
     },
-    loantype: {
+    reference: {
+      type: String,
+    },
+    createdBy: {
       type: String,
     },
   },

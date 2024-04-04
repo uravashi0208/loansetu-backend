@@ -15,6 +15,7 @@ const CourseType = require("./routes/courseType.router");
 const LoanType = require("./routes/loanType.router");
 const Student = require("./routes/student.router");
 const Notification = require("./routes/notification.router");
+const LeadFollowUp = require("./routes/leadFollowup.router");
 var app = express();
 const cors = require("cors");
 app.use(bodyParser.json({ limit: "5000mb" }));
@@ -62,6 +63,7 @@ app.use("/api/coursetype", CourseType);
 app.use("/api/loantype", LoanType);
 app.use("/api/student", Student);
 app.use("/api/notification", Notification);
+app.use("/api/leadfollowup", LeadFollowUp);
 
 // Send all other requests to the Angular app
 app.get("/node/angular/*", function (req, res) {

@@ -10,10 +10,6 @@ exports.login_user = (req, res, next) => {
   const password = req.body.password;
   let user;
 
-  User.find({}).then((foundLeadStatus) => {
-    console.log("foundLeadStatus :", foundLeadStatus);
-  });
-
   User.findOne({ email: email })
     .then((foundUser) => {
       user = foundUser;
@@ -36,15 +32,17 @@ exports.login_user = (req, res, next) => {
     .then((match) => {
       if (match) {
         const payload = { user: user.email };
+        const expiresIn = 12 * 60 * 60; // 12 hours in seconds
         const options = { expiresIn: "12h" };
         const secret = "loginJWTTokenBaseVerification";
         const token = jwt.sign(payload, secret, options);
-        
+
         res.json({
           response: true,
           data: user,
           message: messages.LOGIN_SUCCESS,
           token: token,
+          expiresIn: expiresIn,
         });
       } else {
         res.json({

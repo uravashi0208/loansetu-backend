@@ -1,6 +1,8 @@
 const Student = require("../model/student");
 const messages = require("../constant/message");
 const Notification = require("../model/notification");
+const leadHistory = require("../model/leadHistory");
+const user = require("../model/user");
 
 exports.getAllStudent = (req, res, next) => {
   const id = req.params.id;
@@ -54,11 +56,11 @@ exports.getAllStudent = (req, res, next) => {
     });
 };
 
-exports.getAllLead = (req, res, next) => {
+exports.getAllNewLead = (req, res, next) => {
   const id = req.params.id;
   const pipeline = [
     {
-      $match: { isLead: true },
+      $match: { isLead: true, leadstatus: "New" },
     },
     {
       $addFields: {
@@ -110,6 +112,56 @@ exports.getAllLead = (req, res, next) => {
         preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
       },
     },
+    {
+      $addFields: {
+        createdBy: {
+          $cond: {
+            if: { $ne: ["$createdBy", ""] },
+            then: { $toObjectId: "$createdBy" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        assigne_staff: {
+          $cond: {
+            if: { $ne: ["$assigne_staff", ""] },
+            then: { $toObjectId: "$assigne_staff" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "assigne_staff",
+        foreignField: "_id",
+        as: "assigneeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$assigneeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
   ];
 
   if (id !== "admin") {
@@ -121,6 +173,580 @@ exports.getAllLead = (req, res, next) => {
         res.json({
           response: true,
           data: foundLead,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+exports.getAllProcessingLead = (req, res, next) => {
+  const id = req.params.id;
+  const pipeline = [
+    {
+      $match: { isLead: true, leadstatus: "Processing" },
+    },
+    {
+      $addFields: {
+        universityId: {
+          $cond: {
+            if: { $ne: ["$university", ""] },
+            then: { $toObjectId: "$university" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "university", // Correct collection name if it's different
+        localField: "universityId",
+        foreignField: "_id",
+        as: "universityDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$universityDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        loantypeId: {
+          $cond: {
+            if: { $ne: ["$loantype", ""] },
+            then: { $toObjectId: "$loantype" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "loantype", // Correct collection name if it's different
+        localField: "loantypeId",
+        foreignField: "_id",
+        as: "loantypeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$loantypeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        createdBy: {
+          $cond: {
+            if: { $ne: ["$createdBy", ""] },
+            then: { $toObjectId: "$createdBy" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        assigne_staff: {
+          $cond: {
+            if: { $ne: ["$assigne_staff", ""] },
+            then: { $toObjectId: "$assigne_staff" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "assigne_staff",
+        foreignField: "_id",
+        as: "assigneeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$assigneeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+  ];
+
+  if (id !== "admin") {
+    pipeline.unshift({ $match: { assigne_staff: id } });
+  }
+  Student.aggregate(pipeline)
+    .then((foundLead) => {
+      if (foundLead && foundLead.length > 0) {
+        res.json({
+          response: true,
+          data: foundLead,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+exports.getAllCloseByLead = (req, res, next) => {
+  const id = req.params.id;
+  const pipeline = [
+    {
+      $match: { isLead: true, leadstatus: "Close by" },
+    },
+    {
+      $addFields: {
+        universityId: {
+          $cond: {
+            if: { $ne: ["$university", ""] },
+            then: { $toObjectId: "$university" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "university", // Correct collection name if it's different
+        localField: "universityId",
+        foreignField: "_id",
+        as: "universityDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$universityDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        loantypeId: {
+          $cond: {
+            if: { $ne: ["$loantype", ""] },
+            then: { $toObjectId: "$loantype" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "loantype", // Correct collection name if it's different
+        localField: "loantypeId",
+        foreignField: "_id",
+        as: "loantypeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$loantypeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        createdBy: {
+          $cond: {
+            if: { $ne: ["$createdBy", ""] },
+            then: { $toObjectId: "$createdBy" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        assigne_staff: {
+          $cond: {
+            if: { $ne: ["$assigne_staff", ""] },
+            then: { $toObjectId: "$assigne_staff" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "assigne_staff",
+        foreignField: "_id",
+        as: "assigneeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$assigneeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+  ];
+
+  if (id !== "admin") {
+    pipeline.unshift({ $match: { assigne_staff: id } });
+  }
+  Student.aggregate(pipeline)
+    .then((foundLead) => {
+      if (foundLead && foundLead.length > 0) {
+        res.json({
+          response: true,
+          data: foundLead,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+exports.getAllConfirmLead = (req, res, next) => {
+  const id = req.params.id;
+  const pipeline = [
+    {
+      $match: { isLead: true, leadstatus: "Confirm" },
+    },
+    {
+      $addFields: {
+        universityId: {
+          $cond: {
+            if: { $ne: ["$university", ""] },
+            then: { $toObjectId: "$university" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "university", // Correct collection name if it's different
+        localField: "universityId",
+        foreignField: "_id",
+        as: "universityDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$universityDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        loantypeId: {
+          $cond: {
+            if: { $ne: ["$loantype", ""] },
+            then: { $toObjectId: "$loantype" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "loantype", // Correct collection name if it's different
+        localField: "loantypeId",
+        foreignField: "_id",
+        as: "loantypeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$loantypeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        createdBy: {
+          $cond: {
+            if: { $ne: ["$createdBy", ""] },
+            then: { $toObjectId: "$createdBy" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        assigne_staff: {
+          $cond: {
+            if: { $ne: ["$assigne_staff", ""] },
+            then: { $toObjectId: "$assigne_staff" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "assigne_staff",
+        foreignField: "_id",
+        as: "assigneeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$assigneeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+  ];
+
+  if (id !== "admin") {
+    pipeline.unshift({ $match: { assigne_staff: id } });
+  }
+  Student.aggregate(pipeline)
+    .then((foundLead) => {
+      if (foundLead && foundLead.length > 0) {
+        res.json({
+          response: true,
+          data: foundLead,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+exports.getAllCancelLead = (req, res, next) => {
+  const id = req.params.id;
+  const pipeline = [
+    {
+      $match: { isLead: true, leadstatus: "Cancel" },
+    },
+    {
+      $addFields: {
+        universityId: {
+          $cond: {
+            if: { $ne: ["$university", ""] },
+            then: { $toObjectId: "$university" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "university", // Correct collection name if it's different
+        localField: "universityId",
+        foreignField: "_id",
+        as: "universityDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$universityDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        loantypeId: {
+          $cond: {
+            if: { $ne: ["$loantype", ""] },
+            then: { $toObjectId: "$loantype" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "loantype", // Correct collection name if it's different
+        localField: "loantypeId",
+        foreignField: "_id",
+        as: "loantypeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$loantypeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        createdBy: {
+          $cond: {
+            if: { $ne: ["$createdBy", ""] },
+            then: { $toObjectId: "$createdBy" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        assigne_staff: {
+          $cond: {
+            if: { $ne: ["$assigne_staff", ""] },
+            then: { $toObjectId: "$assigne_staff" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "assigne_staff",
+        foreignField: "_id",
+        as: "assigneeDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$assigneeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+  ];
+
+  if (id !== "admin") {
+    pipeline.unshift({ $match: { assigne_staff: id } });
+  }
+  Student.aggregate(pipeline)
+    .then((foundLead) => {
+      if (foundLead && foundLead.length > 0) {
+        res.json({
+          response: true,
+          data: foundLead,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+exports.getAllLeadHistory = (req, res, next) => {
+  const id = req.params.id;
+  const pipeline = [
+    {
+      $match: {
+        student_id: id,
+      },
+    },
+    {
+      $addFields: {
+        staffId: {
+          $cond: {
+            if: { $ne: ["$staff_id", ""] },
+            then: { $toObjectId: "$staff_id" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "user", // Correct collection name if it's different
+        localField: "staffId",
+        foreignField: "_id",
+        as: "userDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$userDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+  ];
+  leadHistory
+    .aggregate(pipeline)
+    .then((foundLeadHistory) => {
+      if (foundLeadHistory && foundLeadHistory.length > 0) {
+        res.json({
+          response: true,
+          data: foundLeadHistory,
         });
       } else {
         res.json({
@@ -199,6 +825,9 @@ exports.addStudent = async (req, res, next) => {
       isLead: req.body.isLead,
       loantype: req.body.loantype,
       remark: req.body.remark,
+      createdBy: req.body.createdBy,
+      leadstatus: "new",
+      reference: req.body.reference,
     };
 
     if (req.body.assigne_staff) {
@@ -210,7 +839,15 @@ exports.addStudent = async (req, res, next) => {
       };
       await Notification.create(assignleads);
     }
-    await Student.create(updatedData);
+
+    const createdstudent = await Student.create(updatedData);
+    const staff = await user.findById(req.body.createdBy);
+    const leadhistory = {
+      staff_id: req.body.createdBy,
+      student_id: createdstudent._id,
+      message: `Lead created by ${staff.user_name} to New`,
+    };
+    await leadHistory.create(leadhistory);
     res.json({
       response: true,
       message: messages.ADD_STUDENT,
@@ -253,8 +890,54 @@ exports.getStudentById = async (req, res) => {
   }
 };
 
-exports.updateStudent = (req, res) => {
+exports.updateStudent = async (req, res) => {
   const _id = req.params.id;
+  if (req.body.leadassign === "leadassign") {
+    const currentuserstaff = await user.findById(req.body.createdby);
+    const olduserstaff = await user.findById(req.body.old_assigne_staff);
+    const newuserstaff = await user.findById(req.body.assigne_staff);
+    const leadhistory = {
+      staff_id: req.body.createdby,
+      student_id: _id,
+      message: `${currentuserstaff.user_name} Lead Assigned From ${
+        olduserstaff ? olduserstaff.user_name : currentuserstaff.user_name
+      } To ${newuserstaff.user_name}`,
+    };
+    await leadHistory.create(leadhistory);
+    const updatedData = {
+      assigne_staff: req.body.assigne_staff,
+    };
+
+    await Student.updateOne(
+      { _id: _id }, // Query to find the record to update
+      { $set: updatedData } // The update operation to apply
+    );
+    return res.json({
+      response: true,
+      message: messages.UPDATE_LEAD_STATUS,
+    });
+  } else if (req.body.leadassign === "leadstatuschange") {
+    const currentuserstaff = await user.findById(req.body.createdby);
+    const findleadstatus = await Student.findById(_id);
+    const leadhistory = {
+      staff_id: req.body.createdby,
+      student_id: _id,
+      message: `${currentuserstaff.user_name} Status Updated From ${findleadstatus.leadstatus} To ${req.body.leadstatus}`,
+    };
+    await leadHistory.create(leadhistory);
+    const updatedData = {
+      leadstatus: req.body.leadstatus,
+    };
+
+    await Student.updateOne(
+      { _id: _id }, // Query to find the record to update
+      { $set: updatedData } // The update operation to apply
+    );
+    return res.json({
+      response: true,
+      message: messages.UPDATE_LEAD_STATUS,
+    });
+  }
   Student.findByIdAndUpdate(_id, {
     isAssignee: req.body.assigne_staff ? true : false,
     isCustomer: false,
@@ -308,6 +991,7 @@ exports.updateStudent = (req, res) => {
     isLead: req.body.isLead,
     loantype: req.body.loantype,
     remark: req.body.remark,
+    createdBy: req.body.createdBy,
   })
     .then((student) => {
       if (!student) {

@@ -18,8 +18,7 @@ const all = {
 
 // Export the config object based on the NODE_ENV
 // ==============================================
-var environment = process.env.NODE_ENV || 'development';
-console.log("Environment: ", environment);
+var environment = process.env.NODE_ENV || "development";
 module.exports = _.merge(
   all,
   require('./' + environment + '.js') || {},

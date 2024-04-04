@@ -10,8 +10,28 @@ studentRoute
   .get(JwtVerify.validateToken, studentcontroller.getAllStudent);
 
 studentRoute
-  .route("/getlead/:id")
-  .get(JwtVerify.validateToken, studentcontroller.getAllLead);
+  .route("/getnewlead/:id")
+  .get(JwtVerify.validateToken, studentcontroller.getAllNewLead);
+
+studentRoute
+  .route("/getprocessinglead/:id")
+  .get(JwtVerify.validateToken, studentcontroller.getAllProcessingLead);
+
+studentRoute
+  .route("/getclosebylead/:id")
+  .get(JwtVerify.validateToken, studentcontroller.getAllCloseByLead);
+
+studentRoute
+  .route("/getconfirmlead/:id")
+  .get(JwtVerify.validateToken, studentcontroller.getAllConfirmLead);
+
+studentRoute
+  .route("/getcancellead/:id")
+  .get(JwtVerify.validateToken, studentcontroller.getAllCancelLead);
+
+studentRoute
+  .route("/getleadhistory/:id")
+  .get(JwtVerify.validateToken, studentcontroller.getAllLeadHistory);
 
 studentRoute
   .route("/addstudent")
