@@ -10,10 +10,11 @@ exports.roleValidation = () => {
 
 exports.userValidation = () => {
   return [
-    body('user_name').notEmpty().withMessage('User Name is required!'),
-    body('email').notEmpty().withMessage('Email is required!'),
-    body('password').notEmpty().withMessage('Password is required!'),
-  ]
+    body("first_name").notEmpty().withMessage("First Name is required!"),
+    body("last_name").notEmpty().withMessage("Last Name is required!"),
+    body("email").notEmpty().withMessage("Email is required!"),
+    body("password").notEmpty().withMessage("Password is required!"),
+  ];
 }
 exports.validateUserToken = () => {
   return [
