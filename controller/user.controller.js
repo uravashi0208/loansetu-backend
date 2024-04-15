@@ -114,7 +114,7 @@ exports.add_staff = async (req, res, next) => {
 };
 
 exports.getAllStaff = (req, res, next) => {
-  User.find({ role: "staff" })
+  User.find({})
     .sort({ createdAt: -1 })
     .then((foundUser) => {
       if (foundUser) {

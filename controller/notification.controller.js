@@ -18,6 +18,11 @@ exports.getAllNotification = (req, res, next) => {
         path: "$studentsDetails",
       },
     },
+    {
+      $sort: {
+        createdAt: -1, // or -1 for descending order
+      },
+    },
   ];
 
   if (id !== "admin") {
@@ -40,5 +45,24 @@ exports.getAllNotification = (req, res, next) => {
     })
     .catch((err) => {
       console.error(err);
+    });
+};
+
+exports.updateNotification = async (req, res) => {
+  const _id = req.params.id;
+  Notification.updateMany({ staff_id: _id }, { $set: { isRead: true } })
+    .then((notification) => {
+      if (!notification) {
+        res.json({ response: false, message: messages.NO_DATA_FOUND });
+      } else {
+        res.json({
+          response: true,
+          data: notification,
+          message: messages.UPDATE_NOTIFICATION,
+        });
+      }
+    })
+    .catch((error) => {
+      res.json({ response: false, errors: error });
     });
 };

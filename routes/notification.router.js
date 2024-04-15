@@ -9,4 +9,8 @@ notificationRoute
   .route("/getnotification/:id")
   .get(JwtVerify.validateToken, notificationcontroller.getAllNotification);
 
+  notificationRoute
+    .route("/editnotification/:id")
+    .put(JwtVerify.validateToken, notificationcontroller.updateNotification);
+
 module.exports = notificationRoute;

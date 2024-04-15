@@ -161,6 +161,9 @@ let Student = new Schema(
     isLead: {
       type: Boolean,
     },
+    isCustomer: {
+      type: Boolean,
+    },
     loantype: {
       type: String,
     },
@@ -175,6 +178,25 @@ let Student = new Schema(
     },
     createdBy: {
       type: String,
+    },
+    resident_address: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    service_staff: {
+      type: String,
+    },
+    loan_amount: {
+      type: String,
+    },
+    password: {
+      type: String,
+    },
+    converted_date: {
+      type: Date,
+      default: new Date(),
     },
   },
   {

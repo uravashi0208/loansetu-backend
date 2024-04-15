@@ -9,10 +9,19 @@ let LeadFollowUp = new Schema(
     student_id: {
       type: String,
     },
+    current_followup_date: {
+      type: String,
+    },
+    current_followup_comment: {
+      type: String,
+    },
     next_followup_date: {
       type: String,
     },
-    comment: {
+    next_followup_comment: {
+      type: String,
+    },
+    followup_place: {
       type: String,
     },
     createdAt: {

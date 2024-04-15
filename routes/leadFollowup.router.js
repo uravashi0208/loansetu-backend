@@ -10,6 +10,13 @@ leadFollowUpRoute
   .get(JwtVerify.validateToken, leadFollowUpcontroller.getAllLeadFollowUp);
 
 leadFollowUpRoute
+  .route("/getleadfollowupNotifiction/:id")
+  .get(
+    JwtVerify.validateToken,
+    leadFollowUpcontroller.getAllLeadFollowUpNotifiction
+  );
+
+leadFollowUpRoute
   .route("/addleadfollowup")
   .post(JwtVerify.validateToken, leadFollowUpcontroller.addLeadFollowUp);
 
