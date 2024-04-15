@@ -58,13 +58,22 @@ exports.login_user = (req, res, next) => {
 
 exports.register = async (req, res, next) => {
   const email = req.body.email;
-  const username = req.body.user_name;
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
+  const phone = req.body.phone;
+  const dob = req.body.dob;
+  const gender = req.body.gender;
+  const username = req.body.user_name
+    ? req.body.user_name
+    : req.body.first_name + " " + req.body.last_name;
   const password = req.body.password;
 
   try {
-    const foundUser = await User.findOne({ email: email });
+    const existingUser = await User.findOne({
+      $or: [{ email: email }, { phone: phone }],
+    });
 
-    if (foundUser) {
+    if (existingUser) {
       return res.json({
         response: false,
         message: messages.EMAIL_EXIST,
@@ -74,11 +83,16 @@ exports.register = async (req, res, next) => {
     const hash = await bcrypt.hash(password, saltRounds);
 
     const UserData = {
-      user_name: username,
       email: email,
+      user_name: username,
       password: hash,
       role: "staff",
       user_status: true,
+      first_name: first_name,
+      last_name: last_name,
+      phone: phone,
+      dob: dob,
+      gender: gender,
     };
 
     const createdUser = await User.create(UserData);

@@ -57,6 +57,9 @@ let User = new Schema(
     emailsignature: {
       type: String,
     },
+    dob: {
+      type: String,
+    },
     image: {
       type: String,
     },
@@ -96,6 +99,11 @@ let User = new Schema(
     },
     company_email: {
       type: String,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female","other"],
+      default: "male",
     },
   },
   {
