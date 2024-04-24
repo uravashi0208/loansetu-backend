@@ -6,13 +6,85 @@ let Student = new Schema(
     assigne_staff: {
       type: String,
     },
+    relation_with_student: {
+      type: String,
+    },
     student_name: {
+      type: String,
+    },
+    dob: {
+      type: String,
+    },
+    aadhar_no: {
+      type: String,
+    },
+    pan_no: {
+      type: String,
+    },
+    passport: {
+      type: String,
+    },
+    marital_status: {
       type: String,
     },
     phone: {
       type: Number,
     },
+    height: {
+      type: String,
+    },
+    weight: {
+      type: String,
+    },
     email: {
+      type: String,
+    },
+    father_full_name: {
+      type: String,
+    },
+    mother_full_name: {
+      type: String,
+    },
+    resident_address: {
+      type: String,
+    },
+    pincode: {
+      type: String,
+    },
+    permanent_address: {
+      type: String,
+    },
+    permanent_pincode: {
+      type: String,
+    },
+    year_in_current_address: {
+      type: String,
+    },
+    reference_name: {
+      type: String,
+    },
+    reference_phone_no: {
+      type: String,
+    },
+    reference_address: {
+      type: String,
+    },
+    loan_amount_required: {
+      type: String,
+    },
+    exam: {
+      type: String,
+    },
+    listening: {
+      type: String,
+    },
+    reading: {
+      type: String,
+    },
+    writing: {
+      type: String,
+    },
+    speaking: {
       type: String,
     },
     country: {
@@ -24,13 +96,79 @@ let Student = new Schema(
     course_name: {
       type: String,
     },
+    type_of_employment: {
+      type: String,
+    },
+    company_name: {
+      type: String,
+    },
+    applicant_designation: {
+      type: String,
+    },
+    work_experience: {
+      type: String,
+    },
+    current_work_experience: {
+      type: String,
+    },
+    bussiness_address: {
+      type: String,
+    },
+    bussiness_pincode: {
+      type: String,
+    },
+    net_monthly_income: {
+      type: String,
+    },
+    other_income: {
+      type: String,
+    },
+    gold: {
+      type: String,
+    },
+    land: {
+      type: String,
+    },
+    life_insurance_policy: {
+      type: String,
+    },
+    property: {
+      type: String,
+    },
+    shares: {
+      type: String,
+    },
+    rent_income: {
+      type: String,
+    },
+    bank_balance: {
+      type: String,
+    },
+    bank_name: {
+      type: String,
+    },
+    account_number: {
+      type: String,
+    },
+    ifsc_code: {
+      type: String,
+    },
+    currently_running_loan_bank: {
+      type: String,
+    },
+    currently_running_loan_type: {
+      type: String,
+    },
+    currently_running_loan_sanction_amount: {
+      type: String,
+    },
+    currently_running_loan_emi: {
+      type: String,
+    },
     course_type: {
       type: String,
     },
     last_study: {
-      type: String,
-    },
-    exam: {
       type: String,
     },
     exam_core: {
@@ -138,9 +276,14 @@ let Student = new Schema(
     agreeconditions: {
       type: Boolean,
     },
-    education: {
-      type: String,
-    },
+    education: [
+      {
+        examination: String,
+        passingYear: String,
+        percentage: String,
+        school_name: String,
+      },
+    ],
     createdAt: {
       type: Date,
       default: new Date(),
@@ -179,9 +322,6 @@ let Student = new Schema(
     createdBy: {
       type: String,
     },
-    resident_address: {
-      type: String,
-    },
     state: {
       type: String,
     },
@@ -197,6 +337,15 @@ let Student = new Schema(
     converted_date: {
       type: Date,
       default: new Date(),
+    },
+    shisava: {
+      type: Boolean,
+    },
+    shri_shava_remark: {
+      type: String,
+    },
+    shri_sava_amount: {
+      type: String,
     },
   },
   {

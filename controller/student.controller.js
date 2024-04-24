@@ -3,6 +3,7 @@ const messages = require("../constant/message");
 const Notification = require("../model/notification");
 const leadHistory = require("../model/leadHistory");
 const user = require("../model/user");
+const ApplicantDetails = require("../model/applicant");
 
 exports.getAllStudent = (req, res, next) => {
   const id = req.params.id;
@@ -660,7 +661,6 @@ exports.getStudentById = async (req, res) => {
 };
 
 exports.updateStudent = async (req, res) => {
-  console.log("req.body :", req.body);
   const _id = req.params.id;
   if (req.body.leadassign === "leadassign") {
     const currentuserstaff = await user.findById(req.body.createdby);
@@ -788,6 +788,9 @@ exports.updateStudent = async (req, res) => {
       password: req.body.password,
       converted_date: new Date(),
       isCustomer: true,
+      shisava: req.body.shisava,
+      shri_shava_remark: req.body.shri_shava_remark,
+      shri_sava_amount: req.body.shri_sava_amount,
     };
 
     await Student.updateOne(
@@ -809,6 +812,287 @@ exports.updateStudent = async (req, res) => {
       response: true,
       message: messages.UPDATE_LEAD_STATUS,
     });
+  } else if (req.body.edit_customer === "edit_customer") {
+    const updatedData = {
+      student_name: req.body.student_name,
+      relation_with_student: req.body.relation_with_student,
+      dob: req.body.dob,
+      aadhar_no: req.body.aadhar_no,
+      pan_no: req.body.pan_no,
+      passport: req.body.passport,
+      marital_status: req.body.marital_status,
+      phone: req.body.phone,
+      height: req.body.height,
+      weight: req.body.weight,
+      email: req.body.email,
+      father_full_name: req.body.father_full_name,
+      mother_full_name: req.body.mother_full_name,
+      resident_address: req.body.resident_address,
+      pincode: req.body.pincode,
+      permanent_address: req.body.permanent_address,
+      permanent_pincode: req.body.permanent_pincode,
+      year_in_current_address: req.body.year_in_current_address,
+      reference_name: req.body.reference_name,
+      reference_phone_no: req.body.reference_phone_no,
+      reference_address: req.body.reference_address,
+      loan_amount_required: req.body.loan_amount_required,
+      exam: req.body.exam,
+      listening: req.body.listening,
+      reading: req.body.reading,
+      writing: req.body.writing,
+      speaking: req.body.speaking,
+      country: req.body.country,
+      university: req.body.university,
+      course_name: req.body.course_name,
+      type_of_employment: req.body.type_of_employment,
+      company_name: req.body.company_name,
+      applicant_designation: req.body.applicant_designation,
+      work_experience: req.body.work_experience,
+      current_work_experience: req.body.current_work_experience,
+      bussiness_address: req.body.bussiness_address,
+      bussiness_pincode: req.body.bussiness_pincode,
+      net_monthly_income: req.body.net_monthly_income,
+      other_income: req.body.other_income,
+      gold: req.body.gold,
+      land: req.body.land,
+      life_insurance_policy: req.body.life_insurance_policy,
+      property: req.body.property,
+      shares: req.body.shares,
+      rent_income: req.body.rent_income,
+      bank_balance: req.body.bank_balance,
+      bank_name: req.body.bank_name,
+      account_number: req.body.account_number,
+      ifsc_code: req.body.ifsc_code,
+      currently_running_loan_bank: req.body.currently_running_loan_bank,
+      currently_running_loan_type: req.body.currently_running_loan_type,
+      currently_running_loan_sanction_amount:
+        req.body.currently_running_loan_sanction_amount,
+      currently_running_loan_emi: req.body.currently_running_loan_emi,
+      createdBy: req.body.createdBy,
+      education: req.body.examinationDetails,
+      isCustomer: true,
+    };
+
+    const updateStudentData = await Student.updateOne(
+      { _id: _id }, // Query to find the record to update
+      { $set: updatedData } // The update operation to apply
+    );
+    if (updateStudentData) {
+      const updatedApplicantData = {
+        co_applicant1_name: req.body.co_applicant1_name,
+        co_applicant1_relation_with_student:
+          req.body.co_applicant1_relation_with_student,
+        co_applicant1_dob: req.body.co_applicant1_dob,
+        co_applicant1_aadhar_no: req.body.co_applicant1_aadhar_no,
+        co_applicant1_pan_no: req.body.co_applicant1_pan_no,
+        co_applicant1_passport: req.body.co_applicant1_passport,
+        co_applicant1_marital_status: req.body.co_applicant1_marital_status,
+        co_applicant1_phone: req.body.co_applicant1_phone,
+        co_applicant1_height: req.body.co_applicant1_height,
+        co_applicant1_weight: req.body.co_applicant1_weight,
+        co_applicant1_email: req.body.co_applicant1_email,
+        co_applicant1_father_full_name: req.body.co_applicant1_father_full_name,
+        co_applicant1_mother_full_name: req.body.co_applicant1_mother_full_name,
+        co_applicant1_resident_address: req.body.co_applicant1_resident_address,
+        co_applicant1_pincode: req.body.co_applicant1_pincode,
+        co_applicant1_permanent_address:
+          req.body.co_applicant1_permanent_address,
+        co_applicant1_permanent_pincode:
+          req.body.co_applicant1_permanent_pincode,
+        co_applicant1_year_in_current_address:
+          req.body.co_applicant1_year_in_current_address,
+        co_applicant1_reference_name: req.body.co_applicant1_reference_name,
+        co_applicant1_reference_phone_no:
+          req.body.co_applicant1_reference_phone_no,
+        co_applicant1_reference_address:
+          req.body.co_applicant1_reference_address,
+        co_applicant1_loan_amount_required:
+          req.body.co_applicant1_loan_amount_required,
+        co_applicant1_type_of_employment:
+          req.body.co_applicant1_type_of_employment,
+        co_applicant1_company_name: req.body.co_applicant1_company_name,
+        co_applicant1_applicant_designation:
+          req.body.co_applicant1_applicant_designation,
+        co_applicant1_work_experience: req.body.co_applicant1_work_experience,
+        co_applicant1_current_work_experience:
+          req.body.co_applicant1_current_work_experience,
+        co_applicant1_bussiness_address:
+          req.body.co_applicant1_bussiness_address,
+        co_applicant1_bussiness_pincode:
+          req.body.co_applicant1_bussiness_pincode,
+        co_applicant1_net_monthly_income:
+          req.body.co_applicant1_net_monthly_income,
+        co_applicant1_other_income: req.body.co_applicant1_other_income,
+        co_applicant1_gold: req.body.co_applicant1_gold,
+        co_applicant1_land: req.body.co_applicant1_land,
+        co_applicant1_life_insurance_policy:
+          req.body.co_applicant1_life_insurance_policy,
+        co_applicant1_property: req.body.co_applicant1_property,
+        co_applicant1_shares: req.body.co_applicant1_shares,
+        co_applicant1_rent_income: req.body.co_applicant1_rent_income,
+        co_applicant1_bank_balance: req.body.co_applicant1_bank_balance,
+        co_applicant1_bank_name: req.body.co_applicant1_bank_name,
+        co_applicant1_account_number: req.body.co_applicant1_account_number,
+        co_applicant1_ifsc_code: req.body.co_applicant1_ifsc_code,
+        co_applicant1_currently_running_loan_bank:
+          req.body.co_applicant1_currently_running_loan_bank,
+        co_applicant1_currently_running_loan_type:
+          req.body.co_applicant1_currently_running_loan_type,
+        co_applicant1_currently_running_loan_sanction_amount:
+          req.body.co_applicant1_currently_running_loan_sanction_amount,
+        co_applicant1_currently_running_loan_emi:
+          req.body.co_applicant1_currently_running_loan_emi,
+        co_applicant2_name: req.body.co_applicant2_name,
+        co_applicant2_relation_with_student:
+          req.body.co_applicant2_relation_with_student,
+        co_applicant2_dob: req.body.co_applicant2_dob,
+        co_applicant2_aadhar_no: req.body.co_applicant2_aadhar_no,
+        co_applicant2_pan_no: req.body.co_applicant2_pan_no,
+        co_applicant2_passport: req.body.co_applicant2_passport,
+        co_applicant2_marital_status: req.body.co_applicant2_marital_status,
+        co_applicant2_phone: req.body.co_applicant2_phone,
+        co_applicant2_height: req.body.co_applicant2_height,
+        co_applicant2_weight: req.body.co_applicant2_weight,
+        co_applicant2_email: req.body.co_applicant2_email,
+        co_applicant2_father_full_name: req.body.co_applicant2_father_full_name,
+        co_applicant2_mother_full_name: req.body.co_applicant2_mother_full_name,
+        co_applicant2_resident_address: req.body.co_applicant2_resident_address,
+        co_applicant2_pincode: req.body.co_applicant2_pincode,
+        co_applicant2_permanent_address:
+          req.body.co_applicant2_permanent_address,
+        co_applicant2_permanent_pincode:
+          req.body.co_applicant2_permanent_pincode,
+        co_applicant2_year_in_current_address:
+          req.body.co_applicant2_year_in_current_address,
+        co_applicant2_reference_name: req.body.co_applicant2_reference_name,
+        co_applicant2_reference_phone_no:
+          req.body.co_applicant2_reference_phone_no,
+        co_applicant2_reference_address:
+          req.body.co_applicant2_reference_address,
+        co_applicant2_loan_amount_required:
+          req.body.co_applicant2_loan_amount_required,
+        co_applicant2_type_of_employment:
+          req.body.co_applicant2_type_of_employment,
+        co_applicant2_company_name: req.body.co_applicant2_company_name,
+        co_applicant2_applicant_designation:
+          req.body.co_applicant2_applicant_designation,
+        co_applicant2_work_experience: req.body.co_applicant2_work_experience,
+        co_applicant2_current_work_experience:
+          req.body.co_applicant2_current_work_experience,
+        co_applicant2_bussiness_address:
+          req.body.co_applicant2_bussiness_address,
+        co_applicant2_bussiness_pincode:
+          req.body.co_applicant2_bussiness_pincode,
+        co_applicant2_net_monthly_income:
+          req.body.co_applicant2_net_monthly_income,
+        co_applicant2_other_income: req.body.co_applicant2_other_income,
+        co_applicant2_gold: req.body.co_applicant2_gold,
+        co_applicant2_land: req.body.co_applicant2_land,
+        co_applicant2_life_insurance_policy:
+          req.body.co_applicant2_life_insurance_policy,
+        co_applicant2_property: req.body.co_applicant2_property,
+        co_applicant2_shares: req.body.co_applicant2_shares,
+        co_applicant2_rent_income: req.body.co_applicant2_rent_income,
+        co_applicant2_bank_balance: req.body.co_applicant2_bank_balance,
+        co_applicant2_bank_name: req.body.co_applicant2_bank_name,
+        co_applicant2_account_number: req.body.co_applicant2_account_number,
+        co_applicant2_ifsc_code: req.body.co_applicant2_ifsc_code,
+        co_applicant2_currently_running_loan_bank:
+          req.body.co_applicant2_currently_running_loan_bank,
+        co_applicant2_currently_running_loan_type:
+          req.body.co_applicant2_currently_running_loan_type,
+        co_applicant2_currently_running_loan_sanction_amount:
+          req.body.co_applicant2_currently_running_loan_sanction_amount,
+        co_applicant2_currently_running_loan_emi:
+          req.body.co_applicant2_currently_running_loan_emi,
+        student_id: _id,
+      };
+      await ApplicantDetails.updateOne(
+        { student_id: _id },
+        updatedApplicantData,
+        { upsert: true, new: true }
+      );
+      return res.json({
+        response: true,
+        message: messages.UPDATE_STUDENT,
+      });
+    } else {
+      return res.json({ response: false, message: messages.NO_DATA_FOUND });
+    }
+
+    // Student.findByIdAndUpdate(_id, {
+    //   student_name: req.body.student_name,
+    //   relation_with_student: req.body.relation_with_student,
+    //   dob: req.body.dob,
+    //   aadhar_no: req.body.aadhar_no,
+    //   pan_no: req.body.pan_no,
+    //   passport: req.body.passport,
+    //   marital_status: req.body.marital_status,
+    //   phone: req.body.phone,
+    //   height: req.body.height,
+    //   weight: req.body.weight,
+    //   email: req.body.email,
+    //   father_full_name: req.body.father_full_name,
+    //   mother_full_name: req.body.mother_full_name,
+    //   resident_address: req.body.resident_address,
+    //   pincode: req.body.pincode,
+    //   permanent_address: req.body.permanent_address,
+    //   permanent_pincode: req.body.permanent_pincode,
+    //   year_in_current_address: req.body.year_in_current_address,
+    //   reference_name: req.body.reference_name,
+    //   reference_phone_no: req.body.reference_phone_no,
+    //   reference_address: req.body.reference_address,
+    //   loan_amount_required: req.body.loan_amount_required,
+    //   exam: req.body.exam,
+    //   listening: req.body.listening,
+    //   reading: req.body.reading,
+    //   writing: req.body.writing,
+    //   speaking: req.body.speaking,
+    //   country: req.body.country,
+    //   university: req.body.university,
+    //   course_name: req.body.course_name,
+    //   type_of_employment: req.body.type_of_employment,
+    //   company_name: req.body.company_name,
+    //   applicant_designation: req.body.applicant_designation,
+    //   work_experience: req.body.work_experience,
+    //   current_work_experience: req.body.current_work_experience,
+    //   bussiness_address: req.body.bussiness_address,
+    //   bussiness_pincode: req.body.bussiness_pincode,
+    //   net_monthly_income: req.body.net_monthly_income,
+    //   other_income: req.body.other_income,
+    //   gold: req.body.gold,
+    //   land: req.body.land,
+    //   life_insurance_policy: req.body.life_insurance_policy,
+    //   property: req.body.property,
+    //   shares: req.body.shares,
+    //   rent_income: req.body.rent_income,
+    //   bank_balance: req.body.bank_balance,
+    //   bank_name: req.body.bank_name,
+    //   account_number: req.body.account_number,
+    //   ifsc_code: req.body.ifsc_code,
+    //   currently_running_loan_bank: req.body.currently_running_loan_bank,
+    //   currently_running_loan_type: req.body.currently_running_loan_type,
+    //   currently_running_loan_sanction_amount:
+    //     req.body.currently_running_loan_sanction_amount,
+    //   currently_running_loan_emi: req.body.currently_running_loan_emi,
+    //   createdBy: req.body.createdBy,
+    //   isCustomer: true,
+    // })
+    //   .then(async (customers) => {
+    //     if (!customers) {
+    //       res.json({ response: false, message: messages.NO_DATA_FOUND });
+    //     } else {
+
+    //       res.json({
+    //         response: true,
+    //         data: customers,
+    //         message: messages.UPDATE_STUDENT,
+    //       });
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     res.json({ response: false, errors: error });
+    //   });
   }
   Student.findByIdAndUpdate(_id, {
     isAssignee: req.body.assigne_staff ? true : false,
@@ -988,7 +1272,6 @@ exports.getLeadById = (req, res, next) => {
       },
     },
   ];
-  console.log("pipeline :", pipeline);
   Student.aggregate(pipeline)
     .then((foundLead) => {
       if (foundLead && foundLead.length > 0) {
@@ -1006,4 +1289,60 @@ exports.getLeadById = (req, res, next) => {
     .catch((err) => {
       console.error(err);
     });
+};
+
+exports.getCustomerById = async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const pipeline = [
+      {
+        $match: { student_id: _id },
+      },
+      {
+        $addFields: {
+          studentId: {
+            $cond: {
+              if: { $ne: ["$student_id", ""] },
+              then: { $toObjectId: "$student_id" },
+              else: null, // Handle empty 'university' field
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "student", // Correct collection name if it's different
+          localField: "studentId",
+          foreignField: "_id",
+          as: "applicantDetails",
+        },
+      },
+      {
+        $unwind: {
+          path: "$applicantDetails",
+          preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+        },
+      },
+    ];
+    ApplicantDetails.aggregate(pipeline)
+      .then((foundCustomer) => {
+        if (foundCustomer && foundCustomer.length > 0) {
+          res.json({
+            response: true,
+            data: foundCustomer,
+          });
+        } else {
+          res.json({
+            response: false,
+            message: messages.NO_DATA_FOUND,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  } catch (error) {
+    res.json({ response: false, errors: error });
+  }
 };

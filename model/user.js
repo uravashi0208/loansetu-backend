@@ -94,15 +94,14 @@ let User = new Schema(
       type: String,
     },
     branchlocation: {
-      type: Schema.Types.ObjectId,
-      ref: "Branchlocation",
+      type: String,
     },
     company_email: {
       type: String,
     },
     gender: {
       type: String,
-      enum: ["male", "female","other"],
+      enum: ["male", "female", "other"],
       default: "male",
     },
   },

@@ -167,14 +167,12 @@ exports.getstaffById = async (req, res) => {
 };
 
 exports.updateStaff = async (req, res) => {
-  const hash = await bcrypt.hash(req.body.password, saltRounds);
   const _id = req.params.id;
   User.findByIdAndUpdate(_id, {
     user_name: req.body.first_name + " " + req.body.last_name,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     email: req.body.email,
-    password: hash,
     role: req.body.isAdmin === true ? "Admin" : "staff",
     user_status: true,
     isAdmin: req.body.isAdmin,

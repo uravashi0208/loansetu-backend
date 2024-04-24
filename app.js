@@ -17,6 +17,7 @@ const Student = require("./routes/student.router");
 const Notification = require("./routes/notification.router");
 const LeadFollowUp = require("./routes/leadFollowup.router");
 const Customer = require("./routes/customer.router");
+const Reference = require("./routes/reference.router");
 var app = express();
 const cors = require("cors");
 app.use(bodyParser.json({ limit: "5000mb" }));
@@ -66,6 +67,7 @@ app.use("/api/student", Student);
 app.use("/api/notification", Notification);
 app.use("/api/leadfollowup", LeadFollowUp);
 app.use("/api/customer", Customer);
+app.use("/api/reference", Reference);
 
 // Send all other requests to the Angular app
 app.get("/node/angular/*", function (req, res) {

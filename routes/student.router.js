@@ -62,6 +62,9 @@ studentRoute
 studentRoute
   .route("/getstudentbyid/:id")
   .get(JwtVerify.validateToken, studentcontroller.getStudentById);
+studentRoute
+    .route("/getcustomerbyid/:id")
+    .get(JwtVerify.validateToken, studentcontroller.getCustomerById);
 
 studentRoute
   .route("/getleadbyid/:id")

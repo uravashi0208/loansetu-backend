@@ -33,6 +33,9 @@ exports.addBranchLocation = async (req, res, next) => {
 
     const updatedData = {
       location_name: req.body.location_name,
+      branch_address: req.body.branch_address,
+      branch_pincode: req.body.branch_pincode,
+      branch_email: req.body.branch_email,
       status: req.body.status,
     };
 
