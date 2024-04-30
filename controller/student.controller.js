@@ -846,6 +846,17 @@ exports.updateStudent = async (req, res) => {
       { _id: _id }, // Query to find the record to update
       { $set: updatedData } // The update operation to apply
     );
+
+    const updatedApplicantData = {
+      student_id: _id,
+    };
+
+    await ApplicantDetails.updateOne(
+      { student_id: _id },
+      updatedApplicantData,
+      { upsert: true, new: true }
+    );
+
     return res.json({
       response: true,
       message: messages.UPDATE_LEAD_STATUS,
@@ -1094,80 +1105,6 @@ exports.updateStudent = async (req, res) => {
     } else {
       return res.json({ response: false, message: messages.NO_DATA_FOUND });
     }
-
-    // Student.findByIdAndUpdate(_id, {
-    //   student_name: req.body.student_name,
-    //   relation_with_student: req.body.relation_with_student,
-    //   dob: req.body.dob,
-    //   aadhar_no: req.body.aadhar_no,
-    //   pan_no: req.body.pan_no,
-    //   passport: req.body.passport,
-    //   marital_status: req.body.marital_status,
-    //   phone: req.body.phone,
-    //   height: req.body.height,
-    //   weight: req.body.weight,
-    //   email: req.body.email,
-    //   father_full_name: req.body.father_full_name,
-    //   mother_full_name: req.body.mother_full_name,
-    //   resident_address: req.body.resident_address,
-    //   pincode: req.body.pincode,
-    //   permanent_address: req.body.permanent_address,
-    //   permanent_pincode: req.body.permanent_pincode,
-    //   year_in_current_address: req.body.year_in_current_address,
-    //   reference_name: req.body.reference_name,
-    //   reference_phone_no: req.body.reference_phone_no,
-    //   reference_address: req.body.reference_address,
-    //   loan_amount_required: req.body.loan_amount_required,
-    //   exam: req.body.exam,
-    //   listening: req.body.listening,
-    //   reading: req.body.reading,
-    //   writing: req.body.writing,
-    //   speaking: req.body.speaking,
-    //   country: req.body.country,
-    //   university: req.body.university,
-    //   course_name: req.body.course_name,
-    //   type_of_employment: req.body.type_of_employment,
-    //   company_name: req.body.company_name,
-    //   applicant_designation: req.body.applicant_designation,
-    //   work_experience: req.body.work_experience,
-    //   current_work_experience: req.body.current_work_experience,
-    //   bussiness_address: req.body.bussiness_address,
-    //   bussiness_pincode: req.body.bussiness_pincode,
-    //   net_monthly_income: req.body.net_monthly_income,
-    //   other_income: req.body.other_income,
-    //   gold: req.body.gold,
-    //   land: req.body.land,
-    //   life_insurance_policy: req.body.life_insurance_policy,
-    //   property: req.body.property,
-    //   shares: req.body.shares,
-    //   rent_income: req.body.rent_income,
-    //   bank_balance: req.body.bank_balance,
-    //   bank_name: req.body.bank_name,
-    //   account_number: req.body.account_number,
-    //   ifsc_code: req.body.ifsc_code,
-    //   currently_running_loan_bank: req.body.currently_running_loan_bank,
-    //   currently_running_loan_type: req.body.currently_running_loan_type,
-    //   currently_running_loan_sanction_amount:
-    //     req.body.currently_running_loan_sanction_amount,
-    //   currently_running_loan_emi: req.body.currently_running_loan_emi,
-    //   createdBy: req.body.createdBy,
-    //   isCustomer: true,
-    // })
-    //   .then(async (customers) => {
-    //     if (!customers) {
-    //       res.json({ response: false, message: messages.NO_DATA_FOUND });
-    //     } else {
-
-    //       res.json({
-    //         response: true,
-    //         data: customers,
-    //         message: messages.UPDATE_STUDENT,
-    //       });
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     res.json({ response: false, errors: error });
-    //   });
   }
   Student.findByIdAndUpdate(_id, {
     isAssignee: req.body.assigne_staff ? true : false,
@@ -1217,7 +1154,7 @@ exports.updateStudent = async (req, res) => {
     consultant: req.body.consultant,
     refrenceother: req.body.refrenceother,
     agreeconditions: req.body.agreeconditions,
-    education: req.body.education,
+    education: req.body.examinationDetails,
     city: req.body.city,
     isLead: req.body.isLead,
     loantype: req.body.loantype,
