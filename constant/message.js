@@ -39,6 +39,9 @@ const messages = {
   DELETE_STUDENT: "Student deleted succesfully.",
   UPDATE_STUDENT: "Student updated successfully.",
   UPDATE_NOTIFICATION: "Notification updated successfully.",
+  ADD_PARTNER: "Partner added succesfully.",
+  DELETE_PARTNER: "Partner deleted succesfully.",
+  UPDATE_PARTNER: "Partner updated successfully.",
 };
 
 module.exports = messages;

@@ -169,6 +169,31 @@ exports.getAllNewLead = (req, res, next) => {
       },
     },
     {
+      $addFields: {
+        references: {
+          $cond: {
+            if: { $ne: ["$reference", ""] },
+            then: { $toObjectId: "$reference" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "reference", // Correct collection name if it's different
+        localField: "references",
+        foreignField: "_id",
+        as: "referenceDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$referenceDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
       $sort: {
         createdAt: -1, // or -1 for descending order
       },
@@ -308,6 +333,31 @@ exports.getAllProcessingLead = (req, res, next) => {
       },
     },
     {
+      $addFields: {
+        references: {
+          $cond: {
+            if: { $ne: ["$reference", ""] },
+            then: { $toObjectId: "$reference" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "reference", // Correct collection name if it's different
+        localField: "references",
+        foreignField: "_id",
+        as: "referenceDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$referenceDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
       $sort: {
         createdAt: -1, // or -1 for descending order
       },
@@ -439,6 +489,31 @@ exports.getAllCancelLead = (req, res, next) => {
     {
       $unwind: {
         path: "$assigneeDetails",
+        preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
+      },
+    },
+    {
+      $addFields: {
+        references: {
+          $cond: {
+            if: { $ne: ["$reference", ""] },
+            then: { $toObjectId: "$reference" },
+            else: null, // Handle empty 'university' field
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "reference", // Correct collection name if it's different
+        localField: "references",
+        foreignField: "_id",
+        as: "referenceDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$referenceDetails",
         preserveNullAndEmptyArrays: true, // Preserve records even if universityDetails is empty
       },
     },
