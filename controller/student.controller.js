@@ -690,7 +690,9 @@ exports.addStudent = async (req, res, next) => {
     const leadhistory = {
       staff_id: req.body.createdBy,
       student_id: createdstudent._id,
-      message: `Lead created by ${staff.user_name} to New`,
+      message: `Lead created by ${
+        staff.user_name || staff.authorised_person_name
+      } to New`,
     };
     await leadHistory.create(leadhistory);
     res.json({
@@ -744,9 +746,14 @@ exports.updateStudent = async (req, res) => {
     const leadhistory = {
       staff_id: req.body.createdby,
       student_id: _id,
-      message: `${currentuserstaff.user_name} Lead Assigned From ${
-        olduserstaff ? olduserstaff.user_name : currentuserstaff.user_name
-      } To ${newuserstaff.user_name}`,
+      message: `${
+        currentuserstaff.user_name || currentuserstaff.authorised_person_name
+      } Lead Assigned From ${
+        olduserstaff
+          ? olduserstaff.user_name || olduserstaff.authorised_person_name
+          : currentuserstaff.user_name ||
+            currentuserstaff.authorised_person_name
+      } To ${newuserstaff.user_name || newuserstaff.authorised_person_name}`,
     };
     await leadHistory.create(leadhistory);
     const updatedData = {
@@ -790,7 +797,11 @@ exports.updateStudent = async (req, res) => {
     const leadhistory = {
       staff_id: req.body.createdby,
       student_id: _id,
-      message: `${currentuserstaff.user_name} Status Updated From ${findleadstatus.leadstatus} To ${req.body.leadstatus}`,
+      message: `${
+        currentuserstaff.user_name || currentuserstaff.authorised_person_name
+      } Status Updated From ${findleadstatus.leadstatus} To ${
+        req.body.leadstatus
+      }`,
     };
     await leadHistory.create(leadhistory);
     const updatedData = {
@@ -810,7 +821,9 @@ exports.updateStudent = async (req, res) => {
     const leadhistory = {
       staff_id: req.body.createdBy,
       student_id: _id,
-      message: `Lead Updated By ${currentuserstaff.user_name}`,
+      message: `Lead Updated By ${
+        currentuserstaff.user_name || currentuserstaff.authorised_person_name
+      }`,
     };
     await leadHistory.create(leadhistory);
     const updatedData = {

@@ -42,6 +42,7 @@ const messages = {
   ADD_PARTNER: "Partner added succesfully.",
   DELETE_PARTNER: "Partner deleted succesfully.",
   UPDATE_PARTNER: "Partner updated successfully.",
+  ADD_ACTIVITY_LOG: "Activity logs added succesfully.",
 };
 
 module.exports = messages;

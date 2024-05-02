@@ -89,9 +89,11 @@ exports.addLeadFollowUp = async (req, res, next) => {
     const leadhistory = {
       staff_id: req.body.createdby,
       student_id: req.body.student_id,
-      message: `${staff.user_name} Add Next Followup Date At ${moment(
-        req.body.next_followup_date
-      ).format("YYYY-MM-DD hh:mm")}`,
+      message: `${
+        staff.user_name || staff.authorised_person_name
+      } Add Next Followup Date At ${moment(req.body.next_followup_date).format(
+        "YYYY-MM-DD hh:mm"
+      )}`,
     };
     await leadHistory.create(leadhistory);
     const updatedStudentData = {
