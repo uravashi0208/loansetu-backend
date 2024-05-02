@@ -66,7 +66,11 @@ exports.getAllNewLead = (req, res, next) => {
   const id = req.params.id;
   const pipeline = [
     {
-      $match: { isLead: true, leadstatus: "New", iscustomer: { $ne: true } },
+      $match: {
+        isLead: true,
+        leadstatus: "New",
+        iscustomer: { $ne: true },
+      },
     },
     {
       $addFields: {
@@ -170,7 +174,7 @@ exports.getAllNewLead = (req, res, next) => {
     },
     {
       $addFields: {
-        reference: {
+        references: {
           $cond: {
             if: { $ne: ["$reference", ""] },
             then: { $toObjectId: "$reference" },
@@ -182,7 +186,7 @@ exports.getAllNewLead = (req, res, next) => {
     {
       $lookup: {
         from: "reference", // Correct collection name if it's different
-        localField: "reference",
+        localField: "references",
         foreignField: "_id",
         as: "referenceDetails",
       },
