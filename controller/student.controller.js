@@ -170,7 +170,7 @@ exports.getAllNewLead = (req, res, next) => {
     },
     {
       $addFields: {
-        references: {
+        reference: {
           $cond: {
             if: { $ne: ["$reference", ""] },
             then: { $toObjectId: "$reference" },
@@ -182,7 +182,7 @@ exports.getAllNewLead = (req, res, next) => {
     {
       $lookup: {
         from: "reference", // Correct collection name if it's different
-        localField: "references",
+        localField: "reference",
         foreignField: "_id",
         as: "referenceDetails",
       },
@@ -204,11 +204,11 @@ exports.getAllNewLead = (req, res, next) => {
     pipeline.unshift({ $match: { assigne_staff: id } });
   }
   Student.aggregate(pipeline)
-    .then((foundLead) => {
-      if (foundLead && foundLead.length > 0) {
+    .then((foundNewLead) => {
+      if (foundNewLead && foundNewLead.length > 0) {
         res.json({
           response: true,
-          data: foundLead,
+          data: foundNewLead,
         });
       } else {
         res.json({
