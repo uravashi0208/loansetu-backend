@@ -38,8 +38,18 @@ exports.addPartner = async (req, res, next) => {
       { sort: { createdAt: -1 } }
     );
     let oldpartnerCode;
-    if (latestPartner) {
-      oldpartnerCode = parseInt(latestPartner.partner_code.match(/\d+/)[0]);
+    console.log("oldpartnerCode :", latestPartner.partner_code);
+    if (latestPartner && latestPartner.partner_code) {
+      const match = latestPartner.partner_code.match(/\d+/);
+      if (match) {
+        oldpartnerCode = parseInt(match[0]);
+      } else {
+        // Handle the case where no digits were found in partner_code
+        oldpartnerCode = 0;
+      }
+    } else {
+      // Handle the case where latestPartner is null or partner_code is not defined
+      odpartnerCode = 0;
     }
 
     const incrementedNumber = oldpartnerCode + 1;
