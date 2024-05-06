@@ -1,14 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-let Reference = new Schema(
+let City = new Schema(
   {
-    reference_name: {
+    city_name: {
       type: String,
-    },
-    createdBy: {
-      type: Schema.Types.ObjectId,
-      ref: "Student",
     },
     createdAt: {
       type: Date,
@@ -20,8 +16,8 @@ let Reference = new Schema(
     },
   },
   {
-    collection: "reference",
+    collection: "city",
   }
 );
 
-module.exports = mongoose.model("Reference", Reference);
+module.exports = mongoose.model("City", City);

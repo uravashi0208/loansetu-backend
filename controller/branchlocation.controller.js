@@ -1,4 +1,5 @@
 const Branchlocation = require("../model/branchlocation");
+const City = require("../model/city");
 const messages = require("../constant/message");
 
 exports.getAllBranchLocation = (req, res, next) => {
@@ -36,6 +37,7 @@ exports.addBranchLocation = async (req, res, next) => {
       branch_address: req.body.branch_address,
       branch_pincode: req.body.branch_pincode,
       branch_email: req.body.branch_email,
+      branch_city: req.body.branch_city,
       status: req.body.status,
     };
 
@@ -88,6 +90,7 @@ exports.updateBranchLocation = (req, res) => {
   const status = req.body.status;
   Branchlocation.findByIdAndUpdate(_id, {
     location_name: location_name,
+    branch_city: req.body.branch_city,
     status: status,
   })
     .then((category) => {
@@ -104,4 +107,20 @@ exports.updateBranchLocation = (req, res) => {
     .catch((error) => {
       res.json({ response: false, errors: error });
     });
+};
+
+exports.getAllCity = (req, res, next) => {
+  City.find({}).then((foundCity) => {
+    if (foundCity) {
+      res.json({
+        response: true,
+        data: foundCity,
+      });
+    } else {
+      res.json({
+        response: false,
+        message: messages.NO_DATA_FOUND,
+      });
+    }
+  });
 };

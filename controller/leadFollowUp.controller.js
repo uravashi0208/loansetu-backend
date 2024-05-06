@@ -90,7 +90,7 @@ exports.addLeadFollowUp = async (req, res, next) => {
       staff_id: req.body.createdby,
       student_id: req.body.student_id,
       message: `${
-        staff.user_name || staff.authorised_person_name
+        staff.user_name || staff.company_name
       } Add Next Followup Date At ${moment(req.body.next_followup_date).format(
         "YYYY-MM-DD hh:mm"
       )}`,

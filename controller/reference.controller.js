@@ -1,8 +1,8 @@
-const Reference = require("../model/reference");
+const user = require("../model/user");
 const messages = require("../constant/message");
 
 exports.getAllReference = (req, res, next) => {
-  Reference.find({}).then((foundReference) => {
+  user.find({ role: "partner" }).then((foundReference) => {
     if (foundReference) {
       res.json({
         response: true,
@@ -20,8 +20,8 @@ exports.getAllReference = (req, res, next) => {
 exports.addReference = async (req, res, next) => {
   try {
     // Check if email or phone number already exists
-    const existingReference = await Reference.findOne({
-      reference_name: { $regex: new RegExp(req.body.reference_name, "i") },
+    const existingReference = await user.findOne({
+      company_name: { $regex: new RegExp(req.body.company_name, "i") },
     });
 
     if (existingReference) {
@@ -31,11 +31,45 @@ exports.addReference = async (req, res, next) => {
       });
     }
 
-    const updatedData = {
-      reference_name: req.body.reference_name,
+    const latestPartner = await User.findOne(
+      { role: "partner" },
+      {},
+      { sort: { createdAt: -1 } }
+    );
+    let oldpartnerCode;
+    if (latestPartner && latestPartner.partner_code) {
+      const match = latestPartner.partner_code.match(/\d+/);
+      if (match) {
+        oldpartnerCode = parseInt(match[0]);
+      } else {
+        // Handle the case where no digits were found in partner_code
+        oldpartnerCode = 0;
+      }
+    } else {
+      // Handle the case where latestPartner is null or partner_code is not defined
+      odpartnerCode = 0;
+    }
+
+    const incrementedNumber = oldpartnerCode + 1;
+
+    let formattedNumber = incrementedNumber.toString();
+    if (formattedNumber.length === 1) {
+      formattedNumber = "00" + formattedNumber;
+    } else if (formattedNumber.length === 2) {
+      formattedNumber = "0" + formattedNumber;
+    }
+
+    const partnerCode = req.body.company_name.substr(0, 4);
+    const insertData = {
+      partner_code: partnerCode + formattedNumber,
+      company_name: req.body.reference_name,
+      role: "partner",
+      user_status: true,
+      isAdmin: false,
+      isStaff: false,
     };
 
-    await Reference.create(updatedData);
+    await User.create(insertData);
     res.json({
       response: true,
     });

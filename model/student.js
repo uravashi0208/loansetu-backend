@@ -347,6 +347,9 @@ let Student = new Schema(
     shri_sava_amount: {
       type: String,
     },
+    area_post_code: {
+      type: String,
+    },
   },
   {
     collection: "student",

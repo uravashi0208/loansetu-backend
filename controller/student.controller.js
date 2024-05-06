@@ -4,6 +4,7 @@ const Notification = require("../model/notification");
 const leadHistory = require("../model/leadHistory");
 const user = require("../model/user");
 const ApplicantDetails = require("../model/applicant");
+const Branchlocation = require("../model/branchlocation");
 
 exports.getAllStudent = (req, res, next) => {
   const id = req.params.id;
@@ -64,6 +65,8 @@ exports.getAllStudent = (req, res, next) => {
 
 exports.getAllNewLead = (req, res, next) => {
   const id = req.params.id;
+  const isAdmin = id === "admin";
+  console.log("id :", id, isAdmin);
   const pipeline = [
     {
       $match: {
@@ -185,7 +188,7 @@ exports.getAllNewLead = (req, res, next) => {
     },
     {
       $lookup: {
-        from: "reference", // Correct collection name if it's different
+        from: "user", // Correct collection name if it's different
         localField: "references",
         foreignField: "_id",
         as: "referenceDetails",
@@ -204,8 +207,10 @@ exports.getAllNewLead = (req, res, next) => {
     },
   ];
 
-  if (id !== "admin") {
-    pipeline.unshift({ $match: { assigne_staff: id } });
+  if (!isAdmin) {
+    pipeline.unshift({
+      $match: { assigne_staff: id },
+    });
   }
   Student.aggregate(pipeline)
     .then((foundNewLead) => {
@@ -222,7 +227,7 @@ exports.getAllNewLead = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.error(err);
+      console.error("Error in getAllNewLead:", err);
     });
 };
 
@@ -349,7 +354,7 @@ exports.getAllProcessingLead = (req, res, next) => {
     },
     {
       $lookup: {
-        from: "reference", // Correct collection name if it's different
+        from: "user", // Correct collection name if it's different
         localField: "references",
         foreignField: "_id",
         as: "referenceDetails",
@@ -473,7 +478,7 @@ exports.getAllCancelLead = (req, res, next) => {
     },
     {
       $addFields: {
-        assigne_staff: {
+        assigneStaff: {
           $cond: {
             if: { $ne: ["$assigne_staff", ""] },
             then: { $toObjectId: "$assigne_staff" },
@@ -485,7 +490,7 @@ exports.getAllCancelLead = (req, res, next) => {
     {
       $lookup: {
         from: "user", // Correct collection name if it's different
-        localField: "assigne_staff",
+        localField: "assigneStaff",
         foreignField: "_id",
         as: "assigneeDetails",
       },
@@ -509,7 +514,7 @@ exports.getAllCancelLead = (req, res, next) => {
     },
     {
       $lookup: {
-        from: "reference", // Correct collection name if it's different
+        from: "user", // Correct collection name if it's different
         localField: "references",
         foreignField: "_id",
         as: "referenceDetails",
@@ -677,6 +682,7 @@ exports.addStudent = async (req, res, next) => {
       createdBy: req.body.createdBy,
       leadstatus: "New",
       reference: req.body.reference,
+      area_post_code: req.body.area_post_code,
     };
 
     if (req.body.assigne_staff) {
@@ -695,7 +701,89 @@ exports.addStudent = async (req, res, next) => {
       staff_id: req.body.createdBy,
       student_id: createdstudent._id,
       message: `Lead created by ${
-        staff.user_name || staff.authorised_person_name
+        staff.user_name || staff.company_name
+      } to New`,
+    };
+    await leadHistory.create(leadhistory);
+    res.json({
+      response: true,
+      message: messages.ADD_STUDENT,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+exports.addPartnerLead = async (req, res, next) => {
+  try {
+    // Check if email or phone number already exists
+    const existingStudent = await Student.findOne({
+      phone: req.body.phone,
+    });
+    if (existingStudent) {
+      return res.json({
+        response: false,
+        message: messages.MOBILE_RECORD_EXIST,
+      });
+    }
+
+    const branchLocation = await Branchlocation.findOne({
+      branch_pincode: req.body.area_post_code,
+    });
+    let assigneestaff;
+    if (branchLocation) {
+      const getnearbystaff = await user.find({
+        branchlocation: branchLocation._id,
+        role: "staff",
+        staff_team: "sales",
+      });
+      const randomIndex = Math.floor(Math.random() * getnearbystaff.length);
+
+      // Get the user object at the random index
+      const randomUser = getnearbystaff[randomIndex];
+      assigneestaff = randomUser._id;
+    } else {
+      assigneestaff = req.body.assigne_staff;
+    }
+    console.log("assigneestaff:", assigneestaff);
+
+    const updatedData = {
+      isAssignee: req.body.assigne_staff ? true : false,
+      isCustomer: false,
+      assigne_staff: assigneestaff,
+      student_name: req.body.student_name,
+      phone: req.body.phone,
+      email: req.body.email,
+      loantype: req.body.loantype,
+      city: req.body.city,
+      country: req.body.country,
+      university: req.body.university,
+      course_type: req.body.course_type,
+      remark: req.body.remark,
+      isLead: req.body.isLead,
+      createdBy: req.body.createdBy,
+      reference: req.body.reference,
+      area_post_code: req.body.area_post_code,
+      leadstatus: "New",
+    };
+
+    if (assigneestaff) {
+      const assignleads = {
+        staff_id: assigneestaff,
+        createdBy: req.body.createdBy,
+        message: "Asssign a New lead.",
+        isRead: false,
+      };
+      await Notification.create(assignleads);
+    }
+
+    const createdstudent = await Student.create(updatedData);
+    const staff = await user.findById(req.body.createdBy);
+    const leadhistory = {
+      staff_id: req.body.createdBy,
+      student_id: createdstudent._id,
+      message: `Lead created by ${
+        staff.user_name || staff.company_name
       } to New`,
     };
     await leadHistory.create(leadhistory);
@@ -751,13 +839,12 @@ exports.updateStudent = async (req, res) => {
       staff_id: req.body.createdby,
       student_id: _id,
       message: `${
-        currentuserstaff.user_name || currentuserstaff.authorised_person_name
+        currentuserstaff.user_name || currentuserstaff.company_name
       } Lead Assigned From ${
         olduserstaff
-          ? olduserstaff.user_name || olduserstaff.authorised_person_name
-          : currentuserstaff.user_name ||
-            currentuserstaff.authorised_person_name
-      } To ${newuserstaff.user_name || newuserstaff.authorised_person_name}`,
+          ? olduserstaff.user_name || olduserstaff.company_name
+          : currentuserstaff.user_name || currentuserstaff.company_name
+      } To ${newuserstaff.user_name || newuserstaff.company_name}`,
     };
     await leadHistory.create(leadhistory);
     const updatedData = {
@@ -802,7 +889,7 @@ exports.updateStudent = async (req, res) => {
       staff_id: req.body.createdby,
       student_id: _id,
       message: `${
-        currentuserstaff.user_name || currentuserstaff.authorised_person_name
+        currentuserstaff.user_name || currentuserstaff.company_name
       } Status Updated From ${findleadstatus.leadstatus} To ${
         req.body.leadstatus
       }`,
@@ -826,7 +913,7 @@ exports.updateStudent = async (req, res) => {
       staff_id: req.body.createdBy,
       student_id: _id,
       message: `Lead Updated By ${
-        currentuserstaff.user_name || currentuserstaff.authorised_person_name
+        currentuserstaff.user_name || currentuserstaff.company_name
       }`,
     };
     await leadHistory.create(leadhistory);

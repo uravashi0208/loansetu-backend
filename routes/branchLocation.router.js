@@ -9,6 +9,10 @@ branchLocationRoute
   .route("/getbranchlocation")
   .get(JwtVerify.validateToken, branchLocationcontroller.getAllBranchLocation);
 
+  branchLocationRoute
+    .route("/getcity")
+    .get(JwtVerify.validateToken, branchLocationcontroller.getAllCity);
+
 branchLocationRoute
   .route("/addbranchlocation")
   .post(JwtVerify.validateToken, branchLocationcontroller.addBranchLocation);

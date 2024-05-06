@@ -14,6 +14,7 @@ const messages = {
   NO_DATA_FOUND: "No data found.",
   LOGOUT_SUCCESS: "Logout succesfully.",
   RECORD_EXIST: "Already exists.",
+  MOBILE_RECORD_EXIST: "Mobile number already exists.",
   ADD_LOCATION: "Location added succesfully.",
   DELETE_LOCATION: "Location deleted succesfully.",
   UPDATE_LOCATION: "Location updated successfully.",

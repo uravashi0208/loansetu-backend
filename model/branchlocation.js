@@ -15,6 +15,9 @@ let Branchlocation = new Schema(
     branch_email: {
       type: String,
     },
+    branch_city: {
+      type: String,
+    },
     status: {
       type: Boolean,
       default: false,

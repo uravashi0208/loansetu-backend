@@ -2,6 +2,7 @@ const User = require("../model/user");
 const messages = require("../constant/message");
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
+const { transporter } = require("../config/emailConfig");
 
 exports.getAllPartner = (req, res, next) => {
   User.find({ role: "partner" }).then((foundPartner) => {
@@ -38,7 +39,6 @@ exports.addPartner = async (req, res, next) => {
       { sort: { createdAt: -1 } }
     );
     let oldpartnerCode;
-    console.log("oldpartnerCode :", latestPartner.partner_code);
     if (latestPartner && latestPartner.partner_code) {
       const match = latestPartner.partner_code.match(/\d+/);
       if (match) {
@@ -89,9 +89,21 @@ exports.addPartner = async (req, res, next) => {
     };
 
     await User.create(insertData);
-    res.json({
-      response: true,
-      message: messages.ADD_PARTNER,
+    const mailOptions = {
+      from: "zeel129patel@gmail.com",
+      to: req.body.email,
+      subject: "Account Details",
+      text: `This is registration confirmation mail. Your account is created and here toue email id and password  Email : ${req.body.email}  PassWord : ${req.body.password}`,
+    };
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.error(error);
+      } else {
+        res.json({
+          response: true,
+          message: messages.ADD_PARTNER,
+        });
+      }
     });
   } catch (error) {
     return next(error);

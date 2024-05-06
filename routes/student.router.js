@@ -60,6 +60,10 @@ studentRoute
   .post(JwtVerify.validateToken, studentcontroller.addStudent);
 
 studentRoute
+  .route("/addpartnerlead")
+  .post(JwtVerify.validateToken, studentcontroller.addPartnerLead);
+
+studentRoute
   .route("/getstudentbyid/:id")
   .get(JwtVerify.validateToken, studentcontroller.getStudentById);
 studentRoute
