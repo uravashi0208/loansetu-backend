@@ -1,4 +1,4 @@
-const { transporter } = require("../config/emailConfig");
+const transporter = require("../config/emailConfig");
 const User = require("../model/user");
 const StaffPermission = require("../model/staffpermission");
 const messages = require("../constant/message");

@@ -2,7 +2,7 @@ const User = require("../model/user");
 const messages = require("../constant/message");
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
-const { transporter } = require("../config/emailConfig");
+const transporter = require("../config/emailConfig");
 
 exports.getAllPartner = (req, res, next) => {
   User.find({ role: "partner" }).then((foundPartner) => {
