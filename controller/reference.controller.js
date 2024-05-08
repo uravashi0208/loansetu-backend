@@ -24,8 +24,14 @@ exports.addReference = async (req, res, next) => {
   try {
     // Check if email or phone number already exists
     const existingReference = await user.findOne({
-      company_name: { $regex: new RegExp(req.body.company_name, "i") },
+      company_name: { $eq: req.body.reference_name },
     });
+
+    console.log(
+      "existingReference :",
+      existingReference,
+      req.body.reference_name
+    );
 
     if (existingReference) {
       return res.json({
@@ -34,7 +40,7 @@ exports.addReference = async (req, res, next) => {
       });
     }
 
-    const latestPartner = await User.findOne(
+    const latestPartner = await user.findOne(
       { role: "partner" },
       {},
       { sort: { createdAt: -1 } }
@@ -62,7 +68,7 @@ exports.addReference = async (req, res, next) => {
       formattedNumber = "0" + formattedNumber;
     }
 
-    const partnerCode = req.body.company_name.substr(0, 4);
+    const partnerCode = req.body.reference_name.substr(0, 4);
     const insertData = {
       partner_code: partnerCode + formattedNumber,
       company_name: req.body.reference_name,
@@ -72,7 +78,7 @@ exports.addReference = async (req, res, next) => {
       isStaff: false,
     };
 
-    await User.create(insertData);
+    await user.create(insertData);
     res.json({
       response: true,
     });
