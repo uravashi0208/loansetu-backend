@@ -16,18 +16,18 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = function (req, file, cb) {
+  const allowedMimeTypes = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "application/pdf",
+  ];
   if (
-    (file.fieldname === "image" &&
-      (file.mimetype === "image/jpeg" ||
-        file.mimetype === "image/jpg" ||
-        file.mimetype === "image/png")) ||
-    (file.fieldname === "pan_image" && file.mimetype === "image/jpeg") ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/png" ||
+    (file.fieldname === "image" && file.mimetype === "image/jpeg") ||
+    (file.fieldname === "pan_image" &&
+      allowedMimeTypes.includes(file.mimetype)) ||
     (file.fieldname === "aadhar_image" &&
-      (file.mimetype === "image/jpeg" ||
-        file.mimetype === "image/jpg" ||
-        file.mimetype === "image/png")) ||
+      allowedMimeTypes.includes(file.mimetype)) ||
     (file.fieldname === "contract_pdf" && file.mimetype === "application/pdf")
   ) {
     cb(null, true); // Accept the file

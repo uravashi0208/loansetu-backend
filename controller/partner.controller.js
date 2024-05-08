@@ -5,19 +5,21 @@ const saltRounds = 10;
 const transporter = require("../config/emailConfig");
 
 exports.getAllPartner = (req, res, next) => {
-  User.find({ role: "partner" }).then((foundPartner) => {
-    if (foundPartner) {
-      res.json({
-        response: true,
-        data: foundPartner,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  User.find({ role: "partner" })
+    .sort({ createdAt: -1 })
+    .then((foundPartner) => {
+      if (foundPartner) {
+        res.json({
+          response: true,
+          data: foundPartner,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
 
 exports.addPartner = async (req, res, next) => {
@@ -49,7 +51,7 @@ exports.addPartner = async (req, res, next) => {
       }
     } else {
       // Handle the case where latestPartner is null or partner_code is not defined
-      odpartnerCode = 0;
+      oldpartnerCode = 0;
     }
 
     const incrementedNumber = oldpartnerCode + 1;
@@ -85,6 +87,7 @@ exports.addPartner = async (req, res, next) => {
       account_number: req.body.account_number,
       role: "partner",
       password: hash,
+      bank_ifsc_code: req.body.bank_ifsc_code,
       user_status: true,
     };
 

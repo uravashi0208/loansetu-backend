@@ -2,19 +2,22 @@ const user = require("../model/user");
 const messages = require("../constant/message");
 
 exports.getAllReference = (req, res, next) => {
-  user.find({ role: "partner" }).then((foundReference) => {
-    if (foundReference) {
-      res.json({
-        response: true,
-        data: foundReference,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  user
+    .find({ role: "partner" })
+    .sort({ createdAt: -1 })
+    .then((foundReference) => {
+      if (foundReference) {
+        res.json({
+          response: true,
+          data: foundReference,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
 
 exports.addReference = async (req, res, next) => {

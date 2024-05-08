@@ -350,6 +350,63 @@ let Student = new Schema(
     area_post_code: {
       type: String,
     },
+    bussiness_other: {
+      type: String,
+    },
+    bussiness_other_name: {
+      type: String,
+    },
+    other_earning_member_yes: {
+      type: Boolean,
+    },
+    other_earning_member_no: {
+      type: Boolean,
+    },
+    other_earning_member_job: {
+      type: Boolean,
+    },
+    other_earning_member_business: {
+      type: Boolean,
+    },
+    other_earning_member_monthlySalary: {
+      type: String,
+    },
+    other_earning_member_salaryInCash: {
+      type: Boolean,
+    },
+    other_earning_member_salaryInBank: {
+      type: Boolean,
+    },
+    other_earning_member_designation: {
+      type: String,
+    },
+    other_earning_member_bussinessline: {
+      type: String,
+    },
+    other_earning_member_gst: {
+      type: Boolean,
+    },
+    other_earning_member_ssi: {
+      type: Boolean,
+    },
+    other_earning_member_professional_tax: {
+      type: Boolean,
+    },
+    other_earning_member_gumastadhara_licence: {
+      type: Boolean,
+    },
+    other_earning_member_bussiness_other: {
+      type: Boolean,
+    },
+    other_earning_member_bussiness_other_name: {
+      type: String,
+    },
+    other_earning_member_bussinessaccountyes: {
+      type: Boolean,
+    },
+    other_earning_member_bussinessaccountno: {
+      type: Boolean,
+    },
   },
   {
     collection: "student",

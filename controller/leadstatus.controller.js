@@ -2,19 +2,21 @@ const LeadStatus = require("../model/leadstatus");
 const messages = require("../constant/message");
 
 exports.getAllLeadStatus = (req, res, next) => {
-  LeadStatus.find({}).then((foundLeadStatus) => {
-    if (foundLeadStatus) {
-      res.json({
-        response: true,
-        data: foundLeadStatus,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  LeadStatus.find({})
+    .sort({ createdAt: -1 })
+    .then((foundLeadStatus) => {
+      if (foundLeadStatus) {
+        res.json({
+          response: true,
+          data: foundLeadStatus,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
 
 exports.addLeadStatus = async (req, res, next) => {

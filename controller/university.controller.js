@@ -3,36 +3,40 @@ const messages = require("../constant/message");
 
 exports.getAllUniversity = (req, res, next) => {
   const id = req.params.id;
-  University.find({}).then((foundUniversity) => {
-    if (foundUniversity) {
-      res.json({
-        response: true,
-        data: foundUniversity,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  University.find({})
+    .sort({ createdAt: -1 })
+    .then((foundUniversity) => {
+      if (foundUniversity) {
+        res.json({
+          response: true,
+          data: foundUniversity,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
 
 exports.getAllUniversityByCountry = (req, res, next) => {
   const id = req.params.id;
-  University.find({ country_name: id }).then((foundUniversity) => {
-    if (foundUniversity) {
-      res.json({
-        response: true,
-        data: foundUniversity,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  University.find({ country_name: id })
+    .sort({ createdAt: -1 })
+    .then((foundUniversity) => {
+      if (foundUniversity) {
+        res.json({
+          response: true,
+          data: foundUniversity,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
 
 exports.getAllCountry = (req, res, next) => {
@@ -40,6 +44,7 @@ exports.getAllCountry = (req, res, next) => {
     { $group: { _id: "$country_name" } },
     { $match: { _id: { $exists: true, $ne: null } } },
   ])
+    .sort({ createdAt: -1 })
     .then((foundCountries) => {
       if (foundCountries && foundCountries.length > 0) {
         const commonCountries = foundCountries.map((country) => country._id);

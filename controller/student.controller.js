@@ -66,7 +66,6 @@ exports.getAllStudent = (req, res, next) => {
 exports.getAllNewLead = (req, res, next) => {
   const id = req.params.id;
   const isAdmin = id === "admin";
-  console.log("id :", id, isAdmin);
   const pipeline = [
     {
       $match: {
@@ -629,7 +628,9 @@ exports.addStudent = async (req, res, next) => {
     const updatedData = {
       isAssignee: req.body.assigne_staff ? true : false,
       isCustomer: false,
-      assigne_staff: req.body.assigne_staff,
+      assigne_staff: req.body.assigne_staff
+        ? req.body.assigne_staff
+        : req.body.createdBy,
       student_name: req.body.student_name,
       phone: req.body.phone,
       email: req.body.email,
@@ -674,15 +675,45 @@ exports.addStudent = async (req, res, next) => {
       consultant: req.body.consultant,
       refrenceother: req.body.refrenceother,
       agreeconditions: req.body.agreeconditions,
-      education: req.body.education,
+      education: req.body.examinationDetails,
       city: req.body.city,
-      isLead: req.body.isLead,
+      isLead: true,
       loantype: req.body.loantype,
       remark: req.body.remark,
       createdBy: req.body.createdBy,
       leadstatus: "New",
       reference: req.body.reference,
       area_post_code: req.body.area_post_code,
+      bussiness_other: req.body.bussiness_other,
+      bussiness_other_name: req.body.bussiness_other_name,
+      other_earning_member_yes: req.body.other_earning_member_yes,
+      other_earning_member_no: req.body.other_earning_member_no,
+      other_earning_member_job: req.body.other_earning_member_job,
+      other_earning_member_business: req.body.other_earning_member_business,
+      other_earning_member_monthlySalary:
+        req.body.other_earning_member_monthlySalary,
+      other_earning_member_salaryInCash:
+        req.body.other_earning_member_salaryInCash,
+      other_earning_member_salaryInBank:
+        req.body.other_earning_member_salaryInBank,
+      other_earning_member_designation:
+        req.body.other_earning_member_designation,
+      other_earning_member_bussinessline:
+        req.body.other_earning_member_bussinessline,
+      other_earning_member_gst: req.body.other_earning_member_gst,
+      other_earning_member_ssi: req.body.other_earning_member_ssi,
+      other_earning_member_professional_tax:
+        req.body.other_earning_member_professional_tax,
+      other_earning_member_gumastadhara_licence:
+        req.body.other_earning_member_gumastadhara_licence,
+      other_earning_member_bussiness_other:
+        req.body.other_earning_member_bussiness_other,
+      other_earning_member_bussiness_other_name:
+        req.body.other_earning_member_bussiness_other_name,
+      other_earning_member_bussinessaccountyes:
+        req.body.other_earning_member_bussinessaccountyes,
+      other_earning_member_bussinessaccountno:
+        req.body.other_earning_member_bussinessaccountno,
     };
 
     if (req.body.assigne_staff) {
@@ -737,15 +768,17 @@ exports.addPartnerLead = async (req, res, next) => {
         role: "staff",
         staff_team: "sales",
       });
-      const randomIndex = Math.floor(Math.random() * getnearbystaff.length);
-
-      // Get the user object at the random index
-      const randomUser = getnearbystaff[randomIndex];
-      assigneestaff = randomUser._id;
+      if (getnearbystaff) {
+        const randomIndex = Math.floor(Math.random() * getnearbystaff.length);
+        // Get the user object at the random index
+        const randomUser = getnearbystaff[randomIndex];
+        assigneestaff = randomUser._id;
+      } else {
+        assigneestaff = req.body.assigne_staff;
+      }
     } else {
       assigneestaff = req.body.assigne_staff;
     }
-    console.log("assigneestaff:", assigneestaff);
 
     const updatedData = {
       isAssignee: req.body.assigne_staff ? true : false,

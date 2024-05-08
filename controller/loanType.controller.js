@@ -2,19 +2,21 @@ const LoanType = require("../model/loanType");
 const messages = require("../constant/message");
 
 exports.getAllLoanType = (req, res, next) => {
-  LoanType.find({}).then((foundLoanType) => {
-    if (foundLoanType) {
-      res.json({
-        response: true,
-        data: foundLoanType,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  LoanType.find({})
+    .sort({ createdAt: -1 })
+    .then((foundLoanType) => {
+      if (foundLoanType) {
+        res.json({
+          response: true,
+          data: foundLoanType,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
 
 exports.addLoanType = async (req, res, next) => {

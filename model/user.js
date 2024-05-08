@@ -144,6 +144,9 @@ let User = new Schema(
     bank_name: {
       type: String,
     },
+    bank_ifsc_code: {
+      type: String,
+    },
     branch_name: {
       type: String,
     },

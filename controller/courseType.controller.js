@@ -2,19 +2,21 @@ const CourseType = require("../model/courseType");
 const messages = require("../constant/message");
 
 exports.getAllCourseType = (req, res, next) => {
-  CourseType.find({}).then((foundCourseType) => {
-    if (foundCourseType) {
-      res.json({
-        response: true,
-        data: foundCourseType,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  CourseType.find({})
+    .sort({ createdAt: -1 })
+    .then((foundCourseType) => {
+      if (foundCourseType) {
+        res.json({
+          response: true,
+          data: foundCourseType,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
 
 exports.addCourseType = async (req, res, next) => {

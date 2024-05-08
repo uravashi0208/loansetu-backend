@@ -109,7 +109,12 @@ exports.add_staff = async (req, res, next) => {
       message: messages.ADD_STAFF,
     });
   } catch (error) {
-    return next(error);
+    console.error("Error:", error.message); // Log error message to console
+    res.status(500).json({
+      response: false,
+      message: "An error occurred while adding staff.",
+      error: error.message, // Send error message to frontend
+    });
   }
 };
 

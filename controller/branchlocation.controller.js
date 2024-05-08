@@ -3,19 +3,21 @@ const City = require("../model/city");
 const messages = require("../constant/message");
 
 exports.getAllBranchLocation = (req, res, next) => {
-  Branchlocation.find({}).then((foundBranchLocation) => {
-    if (foundBranchLocation) {
-      res.json({
-        response: true,
-        data: foundBranchLocation,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  Branchlocation.find({})
+    .sort({ createdAt: -1 })
+    .then((foundBranchLocation) => {
+      if (foundBranchLocation) {
+        res.json({
+          response: true,
+          data: foundBranchLocation,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
 
 exports.addBranchLocation = async (req, res, next) => {
@@ -110,17 +112,19 @@ exports.updateBranchLocation = (req, res) => {
 };
 
 exports.getAllCity = (req, res, next) => {
-  City.find({}).then((foundCity) => {
-    if (foundCity) {
-      res.json({
-        response: true,
-        data: foundCity,
-      });
-    } else {
-      res.json({
-        response: false,
-        message: messages.NO_DATA_FOUND,
-      });
-    }
-  });
+  City.find({})
+    .sort({ createdAt: -1 })
+    .then((foundCity) => {
+      if (foundCity) {
+        res.json({
+          response: true,
+          data: foundCity,
+        });
+      } else {
+        res.json({
+          response: false,
+          message: messages.NO_DATA_FOUND,
+        });
+      }
+    });
 };
