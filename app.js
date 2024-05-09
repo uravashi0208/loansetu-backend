@@ -20,6 +20,7 @@ const Customer = require("./routes/customer.router");
 const Reference = require("./routes/reference.router");
 const Partner = require("./routes/partner.router");
 const LeadActivityLog = require("./routes/leadActivityLog.router");
+const DashboardReport = require("./routes/dashboard.router");
 var app = express();
 const cors = require("cors");
 app.use(bodyParser.json({ limit: "5000mb" }));
@@ -72,6 +73,7 @@ app.use("/api/customer", Customer);
 app.use("/api/reference", Reference);
 app.use("/api/partner", Partner);
 app.use("/api/leadactivity", LeadActivityLog);
+app.use("/api/dashboardreport", DashboardReport);
 // Send all other requests to the Angular app
 app.get("/node/angular/*", function (req, res) {
   res.sendFile(path.join(__dirname + "/../vkup1-angular10/dist/index.html"));
